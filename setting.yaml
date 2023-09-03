@@ -1,0 +1,21 @@
+system:
+  ip: "0.0.0.0"
+  port: 8000
+  env: "dev"
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db: gvd_db
+  username: root
+  password: Qq3085481534
+  logLevel: error
+redis:
+  ip: 127.0.0.1
+  port: 6379
+  password: ""
+  poolSize: 100
+jwt:
+  expires: 8
+  issuer: "caius"
+  secret: "dsivOBlvsnJv"

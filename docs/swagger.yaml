@@ -1,0 +1,1222 @@
+basePath: /
+definitions:
+  config.Site:
+    properties:
+      abstract:
+        description: 网站简介
+        type: string
+      content:
+        description: 内容
+        type: string
+      footer:
+        description: 尾部信息
+        type: string
+      href:
+        description: 点击go的跳转链接
+        type: string
+      icon:
+        description: 首页的图标
+        type: string
+      iconHref:
+        description: 图标链接
+        type: string
+      title:
+        description: 网站名称
+        type: string
+    type: object
+  doc_api.DocContentResponse:
+    properties:
+      collCount:
+        description: 收藏量
+        type: integer
+      content:
+        type: string
+      diggCount:
+        description: 点赞量
+        type: integer
+      isColl:
+        description: 用户是否收藏
+        type: boolean
+      isPwd:
+        description: 是否需要密码
+        type: boolean
+      isSee:
+        description: 是否试看
+        type: boolean
+      lookCount:
+        description: 浏览量
+        type: integer
+    type: object
+  doc_api.DocCreateRequest:
+    properties:
+      content:
+        type: string
+      parentID:
+        type: integer
+      title:
+        type: string
+    required:
+    - content
+    - title
+    type: object
+  doc_api.DocInfoResponse:
+    properties:
+      contentLength:
+        description: 正文内容
+        type: integer
+      createdAt:
+        type: string
+      diggCount:
+        type: integer
+      id:
+        type: integer
+      key:
+        type: string
+      lookCount:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  doc_api.DocPwdRequest:
+    properties:
+      docID:
+        description: 文档id
+        type: integer
+      pwd:
+        description: 密码
+        type: string
+    type: object
+  doc_api.DocUpdateRequest:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
+  image_api.ImageListResponse:
+    properties:
+      createdAt:
+        type: string
+      fileName:
+        type: string
+      hash:
+        type: string
+      id:
+        type: integer
+      nickName:
+        type: string
+      path:
+        description: update/xx.png
+        type: string
+      size:
+        type: integer
+      updatedAt:
+        type: string
+      userID:
+        type: integer
+      webPath:
+        type: string
+    type: object
+  log_api.LogRemoveRequest:
+    properties:
+      endTime:
+        description: 年月日格式的结束时间
+        type: string
+      idList:
+        description: 可以传id列表删除
+        items:
+          type: integer
+        type: array
+      ip:
+        description: 根据用户ip删除
+        type: string
+      startTime:
+        description: 年月日格式的开始时间
+        type: string
+      userID:
+        description: 根据用户删除日志
+        type: integer
+    type: object
+  log_stash.Level:
+    enum:
+    - 1
+    - 2
+    - 3
+    type: integer
+    x-enum-varnames:
+    - Info
+    - Warning
+    - Error
+  log_stash.LogModel:
+    properties:
+      addr:
+        description: 地址
+        type: string
+      content:
+        description: 详情
+        type: string
+      createdAt:
+        description: 添加时间
+        type: string
+      id:
+        description: 主键id
+        type: integer
+      ip:
+        description: ip
+        type: string
+      level:
+        allOf:
+        - $ref: '#/definitions/log_stash.Level'
+        description: 等级
+      readStatus:
+        description: 阅读状态   true   已读  false  未读  默认是未读状态
+        type: boolean
+      serviceName:
+        description: 服务名称
+        type: string
+      status:
+        description: 登录状态
+        type: boolean
+      title:
+        description: 标题
+        type: string
+      type:
+        allOf:
+        - $ref: '#/definitions/log_stash.LogType'
+        description: 日志的类型  1 登录 2 操作 3 运行
+      updatedAt:
+        description: 更新时间
+        type: string
+      userID:
+        description: 用户id
+        type: integer
+      userName:
+        description: 用户名
+        type: string
+    type: object
+  log_stash.LogType:
+    enum:
+    - 1
+    - 2
+    - 3
+    type: integer
+    x-enum-varnames:
+    - LoginType
+    - ActionType
+    - RuntimeType
+  models.IDRequest:
+    properties:
+      id:
+        type: integer
+    type: object
+  models.UserModel:
+    properties:
+      addr:
+        description: 地址
+        type: string
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+      lastLogin:
+        description: |-
+          指明两个表的外键关系
+          GORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息
+        type: string
+      nickName:
+        type: string
+      roleID:
+        description: 用户对应的角色
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  res.Code:
+    enum:
+    - 0
+    - 7
+    - 9
+    type: integer
+    x-enum-comments:
+      ErrorCode: 系统错误
+      ValidCode: 校验错误
+    x-enum-varnames:
+    - SUCCESS
+    - ErrorCode
+    - ValidCode
+  res.ListResponse-image_api_ImageListResponse:
+    properties:
+      count:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/image_api.ImageListResponse'
+        type: array
+    type: object
+  res.ListResponse-log_stash_LogModel:
+    properties:
+      count:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/log_stash.LogModel'
+        type: array
+    type: object
+  res.ListResponse-models_UserModel:
+    properties:
+      count:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/models.UserModel'
+        type: array
+    type: object
+  res.ListResponse-role_api_RoleListResponse:
+    properties:
+      count:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/role_api.RoleListResponse'
+        type: array
+    type: object
+  res.Response:
+    properties:
+      code:
+        $ref: '#/definitions/res.Code'
+      data: {}
+      msg:
+        type: string
+    type: object
+  role_api.RoleCreateRequest:
+    properties:
+      id:
+        type: integer
+      pwd:
+        type: string
+      title:
+        maxLength: 16
+        minLength: 2
+        type: string
+    required:
+    - title
+    type: object
+  role_api.RoleListResponse:
+    properties:
+      createdAt:
+        type: string
+      docCount:
+        description: 角色拥有的文档数
+        type: integer
+      id:
+        type: integer
+      isSystem:
+        description: 是否是系统角色
+        type: boolean
+      pwd:
+        description: 统一设置这个角色所拥有的需要密码访问的文档的密码
+        type: string
+      title:
+        description: 角色的名称
+        type: string
+      updatedAt:
+        type: string
+      userCount:
+        description: 角色下的用户数
+        type: integer
+    type: object
+  role_doc_api.DocTree:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/role_doc_api.DocTree'
+        type: array
+      isPwd:
+        description: 是否需要密码
+        type: boolean
+      isSee:
+        description: 是否试看
+        type: boolean
+      key:
+        type: integer
+      show:
+        description: 角色是否可以看到文档
+        type: boolean
+      title:
+        type: string
+    type: object
+  role_doc_api.RoleDocListResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/role_doc_api.DocTree'
+        type: array
+    type: object
+  user_api.UserCreateRequest:
+    properties:
+      nickName:
+        description: 昵称
+        type: string
+      password:
+        description: 密码
+        type: string
+      roleID:
+        description: 角色id
+        type: integer
+      userName:
+        description: 用户名
+        type: string
+    required:
+    - password
+    - roleID
+    - userName
+    type: object
+  user_api.UserInfoResponse:
+    properties:
+      addr:
+        description: 地址
+        type: string
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+      lastLogin:
+        description: |-
+          指明两个表的外键关系
+          GORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息
+        type: string
+      nickName:
+        type: string
+      role:
+        type: string
+      roleID:
+        description: 用户对应的角色
+        type: integer
+      updatedAt:
+        type: string
+      userName:
+        type: string
+    type: object
+  user_api.UserLoginRequest:
+    properties:
+      password:
+        type: string
+      userName:
+        type: string
+    required:
+    - password
+    - userName
+    type: object
+  user_api.UserUpdateInfoRequest:
+    properties:
+      avatar:
+        type: string
+      nickName:
+        type: string
+    type: object
+  user_api.UserUpdatePasswordRequest:
+    properties:
+      oldPwd:
+        type: string
+      password:
+        type: string
+    required:
+    - oldPwd
+    - password
+    type: object
+  user_api.UserUpdateRequest:
+    properties:
+      id:
+        type: integer
+      nickName:
+        type: string
+      password:
+        description: bingding字段 定义字段在数据绑定（比如 HTTP 请求参数绑定）时的行为
+        type: string
+      roleID:
+        description: 角色ID
+        type: integer
+    required:
+    - id
+    - password
+    - roleID
+    type: object
+host: 101.43.78.114:8000
+info:
+  contact: {}
+  description: API文档
+  title: 文档项目api文档
+  version: "1.0"
+paths:
+  /ap1/users_info:
+    get:
+      description: 用户信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user_api.UserInfoResponse'
+              type: object
+      summary: 用户信息
+      tags:
+      - 用户管理
+  /api/docs:
+    post:
+      description: 创建文档，创建成功之后，data=文档id
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/doc_api.DocCreateRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 创建文档
+      tags:
+      - 文档管理
+  /api/docs/{id}:
+    delete:
+      description: 删除文档
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除文档
+      tags:
+      - 文档管理
+    get:
+      description: 文档内容
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/doc_api.DocContentResponse'
+              type: object
+      summary: 文档内容
+      tags:
+      - 文档管理
+    put:
+      description: 更新文档，更新文档的标题和正文
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/doc_api.DocUpdateRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 更新文档
+      tags:
+      - 文档管理
+  /api/docs/digg/{id}:
+    get:
+      description: 文档点赞
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 文档点赞
+      tags:
+      - 文档管理
+  /api/docs/edit/{id}:
+    get:
+      description: 获取完整的正文
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 获取完整的正文
+      tags:
+      - 文档管理
+  /api/docs/info/{id}:
+    get:
+      description: 文档基础信息
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/doc_api.DocInfoResponse'
+              type: object
+      summary: 文档基础信息
+      tags:
+      - 文档管理
+  /api/docs/pwd:
+    post:
+      description: 输入密码，访问文档
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/doc_api.DocPwdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/doc_api.DocContentResponse'
+              type: object
+      summary: 输入密码，访问文档
+      tags:
+      - 文档管理
+  /api/image:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 上传图片
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 文件上传
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 上传图片
+      tags:
+      - 图片管理
+  /api/images:
+    delete:
+      description: 删除图片
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除图片
+      tags:
+      - 图片管理
+    get:
+      description: 图片列表
+      parameters:
+      - description: 模糊匹配的关键字
+        in: query
+        name: key
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: sort
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/res.ListResponse-image_api_ImageListResponse'
+              type: object
+      summary: 图片列表
+      tags:
+      - 图片管理
+  /api/login:
+    post:
+      description: 用户登录
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 用户登录
+      tags:
+      - 用户管理
+  /api/logs:
+    delete:
+      description: 删除日志
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/log_api.LogRemoveRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除日志
+      tags:
+      - 日志管理
+    get:
+      description: 日志列表
+      parameters:
+      - description: 感觉地址查询
+        in: query
+        name: addr
+        type: string
+      - description: 查某一天，格式是年-月-日
+        in: query
+        name: date
+        type: string
+      - description: 根据ip查询
+        in: query
+        name: ip
+        type: string
+      - description: 模糊匹配的关键字
+        in: query
+        name: key
+        type: string
+      - description: 日志查询的等级
+        enum:
+        - 1
+        - 2
+        - 3
+        in: query
+        name: level
+        type: integer
+        x-enum-varnames:
+        - Info
+        - Warning
+        - Error
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: sort
+        type: string
+      - description: 日志的类型   1 登录日志  2 操作日志  3 运行日志
+        enum:
+        - 1
+        - 2
+        - 3
+        in: query
+        name: type
+        type: integer
+        x-enum-varnames:
+        - LoginType
+        - ActionType
+        - RuntimeType
+      - description: 根据用户id查询
+        in: query
+        name: userID
+        type: integer
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/res.ListResponse-log_stash_LogModel'
+              type: object
+      summary: 日志列表
+      tags:
+      - 日志管理
+  /api/logs/read:
+    get:
+      description: 日志列表
+      parameters:
+      - in: query
+        name: id
+        type: integer
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 日志列表
+      tags:
+      - 日志管理
+  /api/role_docs/{id}:
+    get:
+      description: 文档树列表
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/role_doc_api.RoleDocListResponse'
+              type: object
+      summary: 文档树列表
+      tags:
+      - 角色文档管理
+  /api/roles:
+    delete:
+      description: 删除角色
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.IDRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除角色
+      tags:
+      - 角色管理
+    get:
+      description: 角色列表
+      parameters:
+      - description: 模糊匹配的关键字
+        in: query
+        name: key
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: sort
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/res.ListResponse-role_api_RoleListResponse'
+              type: object
+      summary: 角色列表
+      tags:
+      - 角色管理
+    post:
+      description: 创建角色
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/role_api.RoleCreateRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 创建角色
+      tags:
+      - 角色管理
+    put:
+      description: 更新角色
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/role_api.RoleCreateRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 更新角色
+      tags:
+      - 角色管理
+  /api/site:
+    get:
+      description: 站点配置查询
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/config.Site'
+              type: object
+      summary: 站点配置查询
+      tags:
+      - 站点配置
+    put:
+      description: 站点配置更新
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 站点配置更新
+      tags:
+      - 站点配置
+  /api/users:
+    delete:
+      description: 删除用户
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除用户
+      tags:
+      - 用户管理
+    get:
+      description: 用户列表
+      parameters:
+      - description: 模糊匹配的关键字
+        in: query
+        name: key
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: sort
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/res.ListResponse-models_UserModel'
+              type: object
+      summary: 用户列表
+      tags:
+      - 用户管理
+    post:
+      description: 创建用户，只能管理员创建
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserCreateRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 创建用户
+      tags:
+      - 用户管理
+    put:
+      description: 管理员更新用户信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 管理员更新用户信息
+      tags:
+      - 用户管理
+  /api/users_info:
+    put:
+      description: 用户更新自己的信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserUpdateInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 用户更新自己的信息
+      tags:
+      - 用户管理
+  /api/users_password:
+    put:
+      description: 用户修改密码
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserUpdatePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 用户修改密码
+      tags:
+      - 用户管理
+swagger: "2.0"

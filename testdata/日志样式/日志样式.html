@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>日志样式</title>
+    <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/pretty-print-json@2.0/dist/css/pretty-print-json.css>
+    <script src=https://cdn.jsdelivr.net/npm/pretty-print-json@2.0/dist/pretty-print-json.min.js></script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: #dee1e6;
+            display: flex;
+            justify-content: center;
+            align-content: center;
+        }
+        .log_content {
+            background-color: white;
+            margin-top: 60px;
+            width: 50%;
+            overflow-x: hidden;
+            padding: 20px;
+            font-size: 14px;
+        }
+        .log_item {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .log_item_label{
+            margin-right: 20px;
+            font-weight: 600;
+            color: darkcyan;
+        }
+        .log_item_label:after {
+            content: ":";
+            display: inline-block;
+        }
+        .log_item_content {
+            white-space: break-spaces;
+        }
+        .log_request {
+            background-color: #dee1e6;
+            border-radius: 5px;
+            padding: 30px 20px;
+            position: relative;
+        }
+        .log_request:before {
+            content: "请求";
+            display: block;
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            color: #99999b;
+        }
+        .log_request_head {
+            display: flex;
+        }
+        .log_request_method {
+            margin-right: 10px;
+            color: #dfb344;
+            font-weight: 700;
+        }
+        .log_request_path {
+        }
+        .log_request_body {
+        }
+        .log_response {
+            background-color: #dee1e6;
+            border-radius: 5px;
+            padding: 30px 20px;
+            position: relative;
+        }
+        .log_response:before {
+            content: "响应";
+            display: block;
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            color: #99999b;
+        }
+        .log_request_json .json-string {
+            white-space: break-spaces;
+        }
+    </style>
+</head>
+<body>
+<div class="log_content">
+    <div class="log_request">
+        <div class="log_request_head">
+            <span class="log_request_method">POST</span>
+            <span class="log_request_path">/api/login</span>
+        </div>
+        <div class="log_request_body">
+            <div class="log_request_json">{"userName": "fengfeng3", "password": "123"}</div>
+        </div>
+    </div>
+    <div class="log_upload">
+        <div class="log_upload_head">
+            <span class="log_upload_file_name">POST</span>
+            <span class="log_upload__file_size">/api/login</span>
+        </div>
+    </div>
+    <div class="log_item">
+        <div class="log_item_label">用户登录</div>
+        <div class="log_item_content">成功</div>
+    </div>
+    <div class="log_item">
+        <div class="log_item_label">token</div>
+        <div class="log_item_content">
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrTmFtZSI6Iuaeq-aeqyIsInJvbGVJRCI6MSwidXNlcklEIjo2LCJ1c2VyTmFtZSI6ImZlbmdmZW5nMyIsImV4cCI6MTY4ODc3Mzc0OS4wNzMzMDMsImlzcyI6ImZlbmdmZW5nIn0.rGDpQNTJt--JQ0Vc3A3RbLgDIqg-d3PxmBuZ7btMGxQ
+        </div>
+    </div>
+    <div class="log_item">
+        <div class="log_item_label">数组</div>
+        <div class="log_item_content">["1","dsfhskf"]</div>
+    </div>
+    <div class="log_item">
+        <div class="log_item_label">对象</div>
+        <div class="log_item_content">
+            {"id":6,"createdAt":"2023-06-27T23:34:00.149+08:00","updatedAt":"2023-07-07T23:31:31.363+08:00","avatar":"/upload/xx.png","nickName":"枫枫","email":"","ip":"127.0.0.1","addr":"","roleID":1,"lastLogin":"2023-07-07T23:31:31.362+08:00"}
+        </div>
+    </div>
+    <div class="log_item">
+        <div class="log_item_label">map</div>
+        <div class="log_item_content">{"age":23,"name":"fengfeng3"}</div>
+    </div>
+    <div class="log_response">
+        <pre class="log_request_json"></pre>
+    </div>
+</div>
+<script>
+    let request = document.querySelector('.log_request_body .log_request_json');
+    request.innerHTML = prettyPrintJson.toHtml(JSON.parse(request.innerHTML));
+    let response = {
+        "code": 0,
+        "data": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrTmFtZSI6Iuaeq-aeqyIsInJvbGVJRCI6MSwidXNlcklEIjo2LCJ1c2VyTmFtZSI6ImZlbmdmZW5nMyIsImV4cCI6MTY4ODc3Mzc0OS4wNzMzMDMsImlzcyI6ImZlbmdmZW5nIn0.rGDpQNTJt--JQ0Vc3A3RbLgDIqg-d3PxmBuZ7btMGxQ",
+        "msg": "成功"
+    };
+    document.querySelector('.log_response .log_request_json').innerHTML = prettyPrintJson.toHtml(response);
+</script>
+</body>
+</html>
