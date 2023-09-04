@@ -1,6 +1,10 @@
 package models
 
-import "gvd_server/global"
+import (
+	"gvd_server/global"
+	"sort"
+	"strings"
+)
 
 type DocModel struct {
 	Model
@@ -34,7 +38,6 @@ func FindAllParentDocList(doc DocModel, docList *[]DocModel) {
 	}
 }
 
-
 // FindAllSubDocList 找一个文档的所有子文档
 func FindAllSubDocList(doc DocModel) (docList []DocModel) {
 	global.DB.Preload("Child").Take(&doc)
@@ -47,25 +50,57 @@ func FindAllSubDocList(doc DocModel) (docList []DocModel) {
 
 // DocTree 返回文档树 根据父亲id来查找子id，刚开始传入 nil
 func DocTree(parentID *uint) (docList []*DocModel) {
-    var query = global.DB.Where("") // 创建一个查询对象
+	var query = global.DB.Where("") // 创建一个查询对象
 
-    if parentID == nil {
-        // 如果 parentID 为 nil，表示要找根文档，因此设置查询条件为 parent_id is null
-        query.Where("parent_id is null")
-    } else {
-        // 如果 parentID 不为 nil，表示要找具有指定 parentID 的子文档
-        query.Where("parent_id = ?", *parentID)
-    }
+	if parentID == nil {
+		// 如果 parentID 为 nil，表示要找根文档，因此设置查询条件为 parent_id is null
+		query.Where("parent_id is null")
+	} else {
+		// 如果 parentID 不为 nil，表示要找具有指定 parentID 的子文档
+		query.Where("parent_id = ?", *parentID)
+	}
 
-    // 在数据库中执行查询，并将结果加载到 docList 切片中
-    global.DB.Preload("Child").Where(query).Find(&docList)
+	// 在数据库中执行查询，并将结果加载到 docList 切片中
+	global.DB.Preload("Child").Where(query).Find(&docList)
 
-    // 遍历查询到的每个文档模型
-    for _, model := range docList {
-        // 递归调用 DocTree 函数，以获取当前文档的子文档，并将子文档列表赋值给当前文档的 Child 字段
-        subDocs := DocTree(&model.ID)
-        model.Child = subDocs
-    }
+	// 遍历查询到的每个文档模型
+	for _, model := range docList {
+		// 递归调用 DocTree 函数，以获取当前文档的子文档，并将子文档列表赋值给当前文档的 Child 字段
+		subDocs := DocTree(&model.ID)
+		model.Child = subDocs
+	}
 
-    return // 返回构建好的文档树
+	return // 返回构建好的文档树
+}
+
+// SortDocByPotCount 按照点的个数进行排序  返回最小的那个元素点的个数
+func SortDocByPotCount(docList []*DocModel) (minCount int) {
+	if len(docList) == 0 {
+		return
+	}
+	sort.Slice(docList, func(i, j int) bool {
+		count1 := GetByPotCount(docList[i])
+		count2 := GetByPotCount(docList[j])
+		if count1 == count2 {
+			// 点的个数相同，按照id，小的放在前面，升序排列
+			return docList[i].ID < docList[j].ID
+		}
+		return count1 < count2
+	})
+	return GetByPotCount(docList[0])
+}
+
+// GetByPotCount 获取文档点的个数
+func GetByPotCount(doc *DocModel) int {
+	return strings.Count(doc.Key, ".")
+}
+
+// TreeByOneDimensional 树的一维化， 将文档树形式转换为一维的
+func TreeByOneDimensional(docList []*DocModel) (list []*DocModel) {
+	for _, model := range docList {
+		list = append(list, model)
+		//递归调用，将子文档也加入
+		list = append(list, TreeByOneDimensional(model.Child)...)
+	}
+	return
 }
