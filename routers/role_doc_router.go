@@ -14,4 +14,7 @@ func (router RouterGroup) RoleDocRouter() {
 	r.GET(":id", app.RoleDocListView)        // 角色-文档列表
 	r.GET("info", app.RoleDocInfoView)       // 角色-文档 信息
 	r.PUT("info", app.RoleDocInfoUpdateView) // 角色-文档 信息更新
+
+	nr := router.Group("role_docs")
+	nr.GET("", app.RoleDocTreeView) // 角色-文档树
 }

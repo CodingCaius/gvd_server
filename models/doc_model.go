@@ -16,7 +16,7 @@ type DocModel struct {
 	ParentID  *uint  `gorm:"comment:父文档id column:parent_id" json:"parentID"`
 	//通过 ParentID 字段与父文档DocModel 关联起来的
 	ParentModel *DocModel   `gorm:"foreignKey:ParentID" json:"-"` //父文档
-	Child       []*DocModel `gorm:"foreignKey:ParentID" json:"-"` //子孙文档
+	Child       []*DocModel `gorm:"foreignKey:ParentID" json:"child"` //子孙文档
 	FreeContent string      `gorm:"comment:预览部分;column:freeContent" json:"freeContent"`
 
 	//收藏该文档的用户列表
