@@ -3,21 +3,23 @@ package flags
 import "flag"
 
 type Option struct {
-	DB bool //初始化数据库
-	Port int //改端口
+	DB   bool   //初始化数据库
+	Port int    //改端口
 	Load string //导入数据库文件
+	Es   bool   // 创建索引
 }
 
 func Parse() (option *Option) {
 	option = new(Option)
 	flag.BoolVar(&option.DB, "db", false, "初始化数据库")
+	flag.BoolVar(&option.Es, "es", false, "创建索引")
 	flag.IntVar(&option.Port, "port", 0, "程序运行的端口")
 	flag.StringVar(&option.Load, "load", "", "导入sql数据库")
 	flag.Parse()
 	return option
 }
 
-//根据里面的参数运行不同的脚本
+// 根据里面的参数运行不同的脚本
 func (option Option) Run() bool {
 	if option.DB {
 		DB()
@@ -29,6 +31,10 @@ func (option Option) Run() bool {
 	}
 	if option.Load != "" {
 		Load()
+		return true
+	}
+	if option.Es {
+		ESIndex()
 		return true
 	}
 	return false

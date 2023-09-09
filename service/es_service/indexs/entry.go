@@ -16,6 +16,7 @@ func CreateIndex(esIndexInterFace models.ESIndexInterFace) {
 	if ExistsIndex(index) {
 		DeleteIndex(index)
 	}
+
 	createIndex, err := global.ESClient.
 		CreateIndex(index).
 		BodyString(esIndexInterFace.Mapping()).Do(context.Background())
