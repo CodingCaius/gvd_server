@@ -206,6 +206,23 @@ definitions:
     - LoginType
     - ActionType
     - RuntimeType
+  models.FullTextModel:
+    properties:
+      body:
+        description: 正文
+        type: string
+      docID:
+        type: integer
+      id:
+        description: es的id
+        type: string
+      slug:
+        description: 跳转地址，可以由docID和title拼接而来
+        type: string
+      title:
+        description: 标题
+        type: string
+    type: object
   models.IDRequest:
     properties:
       id:
@@ -268,6 +285,15 @@ definitions:
       list:
         items:
           $ref: '#/definitions/log_stash.LogModel'
+        type: array
+    type: object
+  res.ListResponse-models_FullTextModel:
+    properties:
+      count:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/models.FullTextModel'
         type: array
     type: object
   res.ListResponse-models_UserModel:
@@ -333,6 +359,13 @@ definitions:
         description: 角色下的用户数
         type: integer
     type: object
+  role_doc_api.DocItem:
+    properties:
+      docID:
+        type: integer
+      sort:
+        type: integer
+    type: object
   role_doc_api.DocTree:
     properties:
       children:
@@ -353,12 +386,105 @@ definitions:
       title:
         type: string
     type: object
+  role_doc_api.RoleDocInfoResponse:
+    properties:
+      freeContent:
+        description: 文档的试看内容
+        type: string
+      isPwd:
+        description: 是否开启密码
+        type: boolean
+      isSee:
+        description: 是否开启了试看
+        type: boolean
+      roleDocPwd:
+        description: 角色文档的密码
+        type: string
+      rolePwd:
+        description: 角色的密码
+        type: string
+    type: object
+  role_doc_api.RoleDocInfoUpdateRequest:
+    properties:
+      docID:
+        type: integer
+      freeContent:
+        description: 文档的试看内容
+        type: string
+      isPwd:
+        description: 是否开启密码
+        type: boolean
+      isSee:
+        description: 是否开启了试看
+        type: boolean
+      roleDocPwd:
+        description: 角色文档的密码
+        type: string
+      roleID:
+        description: 绑定query时，对应标签是 form， 绑定form表单数据也是用 form标签
+        type: integer
+    required:
+    - docID
+    - roleID
+    type: object
   role_doc_api.RoleDocListResponse:
     properties:
       list:
         items:
           $ref: '#/definitions/role_doc_api.DocTree'
         type: array
+    type: object
+  role_doc_api.RoleDocRequest:
+    properties:
+      docID:
+        type: integer
+      roleID:
+        description: 绑定query时，对应标签是 form， 绑定form表单数据也是用 form标签
+        type: integer
+    required:
+    - docID
+    - roleID
+    type: object
+  role_doc_api.RoleDocTree:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/role_doc_api.RoleDocTree'
+        type: array
+      isColl:
+        description: 是否收藏
+        type: boolean
+      isPwd:
+        description: 是否需要密码
+        type: boolean
+      isSee:
+        description: 是否试看
+        type: boolean
+      key:
+        type: integer
+      title:
+        type: string
+      unlock:
+        description: 是否解锁
+        type: boolean
+    type: object
+  role_doc_api.RoleDocTreeResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/role_doc_api.RoleDocTree'
+        type: array
+    type: object
+  role_doc_api.RoleDocUpdateRequest:
+    properties:
+      docList:
+        items:
+          $ref: '#/definitions/role_doc_api.DocItem'
+        type: array
+      roleID:
+        type: integer
+    required:
+    - roleID
     type: object
   user_api.UserCreateRequest:
     properties:
@@ -455,7 +581,7 @@ definitions:
     - password
     - roleID
     type: object
-host: 101.43.78.114:8000
+host: 127.0.0.1:8000
 info:
   contact: {}
   description: API文档
@@ -672,6 +798,38 @@ paths:
                   $ref: '#/definitions/doc_api.DocContentResponse'
               type: object
       summary: 输入密码，访问文档
+      tags:
+      - 文档管理
+  /api/docs/search:
+    get:
+      description: 全文搜索
+      parameters:
+      - description: 模糊匹配的关键字
+        in: query
+        name: key
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: sort
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/res.ListResponse-models_FullTextModel'
+              type: object
+      summary: 全文搜索
       tags:
       - 文档管理
   /api/image:
@@ -898,6 +1056,102 @@ paths:
       summary: 日志列表
       tags:
       - 日志管理
+  /api/role_docs:
+    delete:
+      description: 删除一篇角色文档
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/role_doc_api.RoleDocRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除一篇角色文档
+      tags:
+      - 角色文档管理
+    get:
+      description: 角色文档树
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/role_doc_api.RoleDocTreeResponse'
+              type: object
+      summary: 角色文档树
+      tags:
+      - 角色文档管理
+    post:
+      description: 添加一篇角色文档
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/role_doc_api.RoleDocRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 添加一篇角色文档
+      tags:
+      - 角色文档管理
+    put:
+      description: 角色文档 更新
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/role_doc_api.RoleDocUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 角色文档 更新
+      tags:
+      - 角色文档管理
   /api/role_docs/{id}:
     get:
       description: 文档树列表
@@ -925,6 +1179,63 @@ paths:
                   $ref: '#/definitions/role_doc_api.RoleDocListResponse'
               type: object
       summary: 文档树列表
+      tags:
+      - 角色文档管理
+  /api/role_docs/info:
+    get:
+      description: 角色文档信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - in: query
+        name: docID
+        required: true
+        type: integer
+      - description: 绑定query时，对应标签是 form， 绑定form表单数据也是用 form标签
+        in: query
+        name: roleID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/role_doc_api.RoleDocInfoResponse'
+              type: object
+      summary: 角色文档信息
+      tags:
+      - 角色文档管理
+    put:
+      description: 角色文档信息 更新
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/role_doc_api.RoleDocInfoUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 角色文档信息 更新
       tags:
       - 角色文档管理
   /api/roles:
@@ -1065,7 +1376,7 @@ paths:
             $ref: '#/definitions/res.Response'
       summary: 站点配置更新
       tags:
-      - 站点配置
+      - 站点配
   /api/users:
     delete:
       description: 删除用户

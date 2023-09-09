@@ -13,7 +13,7 @@ import (
 // @Summary 删除一篇角色文档
 // @Description 删除一篇角色文档
 // @Param token header string true "token"
-// @Param data body RoleDocCreateRequest true "参数"
+// @Param data body RoleDocRequest true "参数"
 // @Router /api/role_docs [delete]
 // @Produce json
 // @Success 200 {object} res.Response{}

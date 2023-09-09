@@ -244,6 +244,61 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/docs/search": {
+            "get": {
+                "description": "全文搜索",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文档管理"
+                ],
+                "summary": "全文搜索",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "模糊匹配的关键字",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sort",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/res.ListResponse-models_FullTextModel"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/docs/{id}": {
             "get": {
                 "description": "文档内容",
@@ -702,6 +757,245 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/role_docs": {
+            "get": {
+                "description": "角色文档树",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色文档管理"
+                ],
+                "summary": "角色文档树",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/role_doc_api.RoleDocTreeResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "角色文档 更新",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色文档管理"
+                ],
+                "summary": "角色文档 更新",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/role_doc_api.RoleDocUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "添加一篇角色文档",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色文档管理"
+                ],
+                "summary": "添加一篇角色文档",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/role_doc_api.RoleDocRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除一篇角色文档",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色文档管理"
+                ],
+                "summary": "删除一篇角色文档",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/role_doc_api.RoleDocRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/role_docs/info": {
+            "get": {
+                "description": "角色文档信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色文档管理"
+                ],
+                "summary": "角色文档信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "docID",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "绑定query时，对应标签是 form， 绑定form表单数据也是用 form标签",
+                        "name": "roleID",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/role_doc_api.RoleDocInfoResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "角色文档信息 更新",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色文档管理"
+                ],
+                "summary": "角色文档信息 更新",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/role_doc_api.RoleDocInfoUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/role_docs/{id}": {
             "get": {
                 "description": "文档树列表",
@@ -957,7 +1251,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "站点配置"
+                    "站点配"
                 ],
                 "summary": "站点配置更新",
                 "responses": {
@@ -1505,6 +1799,30 @@ const docTemplate = `{
                 "RuntimeType"
             ]
         },
+        "models.FullTextModel": {
+            "type": "object",
+            "properties": {
+                "body": {
+                    "description": "正文",
+                    "type": "string"
+                },
+                "docID": {
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "es的id",
+                    "type": "string"
+                },
+                "slug": {
+                    "description": "跳转地址，可以由docID和title拼接而来",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                }
+            }
+        },
         "models.IDRequest": {
             "type": "object",
             "properties": {
@@ -1592,6 +1910,20 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/log_stash.LogModel"
+                    }
+                }
+            }
+        },
+        "res.ListResponse-models_FullTextModel": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.FullTextModel"
                     }
                 }
             }
@@ -1689,6 +2021,17 @@ const docTemplate = `{
                 }
             }
         },
+        "role_doc_api.DocItem": {
+            "type": "object",
+            "properties": {
+                "docID": {
+                    "type": "integer"
+                },
+                "sort": {
+                    "type": "integer"
+                }
+            }
+        },
         "role_doc_api.DocTree": {
             "type": "object",
             "properties": {
@@ -1718,6 +2061,63 @@ const docTemplate = `{
                 }
             }
         },
+        "role_doc_api.RoleDocInfoResponse": {
+            "type": "object",
+            "properties": {
+                "freeContent": {
+                    "description": "文档的试看内容",
+                    "type": "string"
+                },
+                "isPwd": {
+                    "description": "是否开启密码",
+                    "type": "boolean"
+                },
+                "isSee": {
+                    "description": "是否开启了试看",
+                    "type": "boolean"
+                },
+                "roleDocPwd": {
+                    "description": "角色文档的密码",
+                    "type": "string"
+                },
+                "rolePwd": {
+                    "description": "角色的密码",
+                    "type": "string"
+                }
+            }
+        },
+        "role_doc_api.RoleDocInfoUpdateRequest": {
+            "type": "object",
+            "required": [
+                "docID",
+                "roleID"
+            ],
+            "properties": {
+                "docID": {
+                    "type": "integer"
+                },
+                "freeContent": {
+                    "description": "文档的试看内容",
+                    "type": "string"
+                },
+                "isPwd": {
+                    "description": "是否开启密码",
+                    "type": "boolean"
+                },
+                "isSee": {
+                    "description": "是否开启了试看",
+                    "type": "boolean"
+                },
+                "roleDocPwd": {
+                    "description": "角色文档的密码",
+                    "type": "string"
+                },
+                "roleID": {
+                    "description": "绑定query时，对应标签是 form， 绑定form表单数据也是用 form标签",
+                    "type": "integer"
+                }
+            }
+        },
         "role_doc_api.RoleDocListResponse": {
             "type": "object",
             "properties": {
@@ -1726,6 +2126,83 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/role_doc_api.DocTree"
                     }
+                }
+            }
+        },
+        "role_doc_api.RoleDocRequest": {
+            "type": "object",
+            "required": [
+                "docID",
+                "roleID"
+            ],
+            "properties": {
+                "docID": {
+                    "type": "integer"
+                },
+                "roleID": {
+                    "description": "绑定query时，对应标签是 form， 绑定form表单数据也是用 form标签",
+                    "type": "integer"
+                }
+            }
+        },
+        "role_doc_api.RoleDocTree": {
+            "type": "object",
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/role_doc_api.RoleDocTree"
+                    }
+                },
+                "isColl": {
+                    "description": "是否收藏",
+                    "type": "boolean"
+                },
+                "isPwd": {
+                    "description": "是否需要密码",
+                    "type": "boolean"
+                },
+                "isSee": {
+                    "description": "是否试看",
+                    "type": "boolean"
+                },
+                "key": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "unlock": {
+                    "description": "是否解锁",
+                    "type": "boolean"
+                }
+            }
+        },
+        "role_doc_api.RoleDocTreeResponse": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/role_doc_api.RoleDocTree"
+                    }
+                }
+            }
+        },
+        "role_doc_api.RoleDocUpdateRequest": {
+            "type": "object",
+            "required": [
+                "roleID"
+            ],
+            "properties": {
+                "docList": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/role_doc_api.DocItem"
+                    }
+                },
+                "roleID": {
+                    "type": "integer"
                 }
             }
         },
