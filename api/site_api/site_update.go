@@ -10,7 +10,7 @@ import (
 )
 
 // SiteUpdateView 站点配置更新
-// @Tags 站点配置
+// @Tags 站点配
 // @Summary 站点配置更新
 // @Description 站点配置更新
 // @Router /api/site [put]
@@ -33,7 +33,7 @@ func (SiteApi) SiteUpdateView(c *gin.Context) {
 
 //更新结构体的值
 func updateStructValue(data any, oldValue reflect.Value) {
-	v := reflect.ValueOf(data) 
+	v := reflect.ValueOf(data)
 	var updateIndexSlice []int
 	for i := 0; i < v.NumField(); i++ {
 		if !v.Field(i).IsZero() {
