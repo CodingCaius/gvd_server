@@ -23,3 +23,11 @@ jwt:
   expires: 8
   issuer: "caius"
   secret: "dsivOBlvsnJv"
+site:
+    title: 哈哈哈
+    icon: xx
+    abstract: ""
+    iconHref: ""
+    href: ""
+    footer: ""
+    content: xxxx
