@@ -3,9 +3,10 @@ package doc_api
 import (
 	"fmt"
 	"gvd_server/global"
+	"gvd_server/models"
 	"gvd_server/plugins/log_stash"
 	"gvd_server/service/common/res"
-	"gvd_server/models"
+	"gvd_server/service/full_search_service"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -65,6 +66,9 @@ func (DocApi) DocCreateView(c *gin.Context) {
 		return
 	}
 
+	// 并发的调用函数，将文档添加到es中，以便进行全文搜索
+	go full_search_service.FullSearchCreate(docModel)
+
 	// key的作用
 	// 怎么算这个key
 	var docList []models.DocModel
@@ -86,7 +90,6 @@ func (DocApi) DocCreateView(c *gin.Context) {
 		RoleID: 1,
 		DocID:  docModel.ID,
 	})
-
 
 	res.OK(docModel.ID, "文档添加成功", c)
 
