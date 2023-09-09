@@ -1,11 +1,13 @@
 package doc_api
 
 import (
-	"github.com/gin-gonic/gin"
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/plugins/log_stash"
 	"gvd_server/service/common/res"
+	"gvd_server/service/full_search_service"
+
+	"github.com/gin-gonic/gin"
 )
 
 type DocUpdateRequest struct {
@@ -49,6 +51,11 @@ func (DocApi) DocUpdateView(c *gin.Context) {
 		res.FailWithMsg("文档不存在", c)
 		return
 	}
+
+	// 把之前的复制一份
+	oldTitle := doc.Title
+	oldContent := doc.Content
+
 	err = global.DB.Model(&doc).Updates(models.DocModel{
 		Title:   cr.Title,
 		Content: cr.Content,
@@ -59,5 +66,11 @@ func (DocApi) DocUpdateView(c *gin.Context) {
 		res.FailWithMsg("文档更新失败", c)
 		return
 	}
+
+	// 判断content和title是否有变化
+	if oldContent != doc.Content || oldTitle != doc.Title {
+		go full_search_service.FullSearchUpdate(doc)
+	}
+
 	res.OKWithMsg("文档更新成功", c)
 }
