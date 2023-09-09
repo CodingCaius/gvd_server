@@ -1,4 +1,3 @@
-
 // 1. 会不会有批量删的需求            不会
 // 2. 是否有关联删除
 
@@ -12,16 +11,17 @@
 
 //     文档-数据表                  不需要关联删
 
-
 package doc_api
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/plugins/log_stash"
 	"gvd_server/service/common/res"
+	"gvd_server/service/full_search_service"
+
+	"github.com/gin-gonic/gin"
 )
 
 // DocRemoveView 删除文档
@@ -86,6 +86,10 @@ func (DocApi) DocRemoveView(c *gin.Context) {
 		res.FailWithMsg("文档删除失败", c)
 		return
 	}
+
+	// 在 es 中删除文档
+	go full_search_service.FullSearchDelete(doc.ID)
+
 	log.Info(fmt.Sprintf("文档删除成功--%s", doc.Title))
 	res.OKWithMsg(fmt.Sprintf("删除文档成功 共删除 %d 篇文档", len(subDocList)), c)
 }
