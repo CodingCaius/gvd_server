@@ -51,6 +51,10 @@ func (option Option) Run() bool {
 		ESDump()
 		return true
 	}
+	if option.ESLoad != "" {
+		ESLoad(option.ESLoad)
+		return true
+	}
 
 	return false
 }

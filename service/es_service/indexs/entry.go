@@ -2,29 +2,31 @@ package indexs
 
 import (
 	"context"
-	"github.com/sirupsen/logrus"
 	"gvd_server/global"
 	"gvd_server/models"
+
+	"github.com/sirupsen/logrus"
 )
 
 // CreateIndex 创建索引
 func CreateIndex(esIndexInterFace models.ESIndexInterFace) {
+	CreateIndexByJson(esIndexInterFace.Index(), esIndexInterFace.Mapping())
+}
+
+func CreateIndexByJson(index string, mapping string) {
 	if global.ESClient == nil {
 		logrus.Fatalf("请配置es连接")
 	}
-	index := esIndexInterFace.Index()
 	if ExistsIndex(index) {
 		DeleteIndex(index)
 	}
-
 	createIndex, err := global.ESClient.
 		CreateIndex(index).
-		BodyString(esIndexInterFace.Mapping()).Do(context.Background())
+		BodyString(mapping).Do(context.Background())
 	if err != nil {
 		logrus.Fatalf("%s err:%s", index, err.Error())
 	}
 	logrus.Infof("索引 %s 创建成功", createIndex.Index)
-
 }
 
 // ExistsIndex 判断索引是否存在

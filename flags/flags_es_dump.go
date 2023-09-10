@@ -22,7 +22,7 @@ type ESRawMessage struct {
 // ESIndexResponse 索引响应
 type ESIndexResponse struct {
 	Data    []ESRawMessage `json:"data"`
-	Mapping any            `json:"mapping"`
+	Mapping string         `json:"mapping"`
 	Index   string         `json:"index"`
 }
 
@@ -40,7 +40,7 @@ func ESDump() {
 		// 设置每页显示数量
 		Size(10000).Do(context.Background())
 
-	if err!= nil {
+	if err != nil {
 		logrus.Fatalf("%s err: %s", index, err.Error())
 	}
 
