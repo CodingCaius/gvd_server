@@ -6,6 +6,7 @@ import (
 	"gvd_server/flags"
 	"gvd_server/global"
 	"gvd_server/routers"
+	"gvd_server/service/cron_service"
 )
 
 // @title 文档项目api文档
@@ -26,6 +27,9 @@ func main() {
 	if option.Run() {
 		return
 	}
+
+	//定时任务
+	cron_service.CornInit()
 
 	router := routers.Routers()
 	addr := global.Config.System.Addr()
