@@ -32,7 +32,7 @@ func (option Option) Run() bool {
 		return false
 	}
 	if option.Load != "" {
-		Load()
+		Load(option.Load)
 		return true
 	}
 	if option.Es {
@@ -43,6 +43,6 @@ func (option Option) Run() bool {
 		Dump()
 		return true
 	}
-	
+
 	return false
 }
