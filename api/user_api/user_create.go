@@ -8,6 +8,7 @@ import (
 	"gvd_server/models"
 	"gvd_server/plugins/log_stash"
 	"gvd_server/service/common/res"
+	"gvd_server/utils/ip"
 	"gvd_server/utils/pwd"
 	"time"
 
@@ -42,11 +43,14 @@ func (UserApi) UserCreateView(c *gin.Context) {
 	byteData, _ := json.Marshal(cr)
 	log.SetItem("创建参数", string(byteData))
 
+	_ip := c.ClientIP()
+
 	err = createUser(models.UserModel{
 		UserName:  cr.UserName,
 		Password:  cr.Password,
 		NickName:  cr.NickName,
-		IP:        c.RemoteIP(),
+		IP:        _ip,
+		Addr:      ip.GetAddr(_ip),
 		RoleID:    cr.RoleID,
 		LastLogin: time.Now(),
 	}, &log)
@@ -59,9 +63,8 @@ func (UserApi) UserCreateView(c *gin.Context) {
 	res.OKWithMsg("用户创建成功", c)
 }
 
-
-//将log作为参数传入，可以做到操作日志的更新
-//根据是否是同一个log，来决定是否更新操作日志
+// 将log作为参数传入，可以做到操作日志的更新
+// 根据是否是同一个log，来决定是否更新操作日志
 func createUser(user models.UserModel, log *log_stash.Action) (err error) {
 	err = global.DB.Take(&user, "userName = ?", user.UserName).Error
 	if err == nil {

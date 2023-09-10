@@ -28,8 +28,9 @@ type Action struct {
 
 // 设置Action对象，并初始化一些字段
 func NewAction(c *gin.Context) Action {
-	ip := c.RemoteIP()
-	addr := "局域网"
+	// ip := c.ClientIP()
+	ip := c.ClientIP()
+	addr := getAddr(ip)
 	action := Action{
 		ip:      ip,
 		addr:    addr,

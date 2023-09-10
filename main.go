@@ -22,6 +22,7 @@ func main() {
 	global.DB = core.InitMysql()
 	global.Redis = core.InitRedis(0)
 	global.ESClient = core.InitEs()
+	global.AddrDB = core.InitAddrDB()
 
 	option := flags.Parse()
 	if option.Run() {

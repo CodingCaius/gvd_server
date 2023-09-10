@@ -20,7 +20,7 @@ func NewFailLogin(title, userName, pwd string, c *gin.Context) {
 }
 
 func saveLoginLog(title string, content string, userID uint, userName string, status bool, c *gin.Context) {
-	ip := c.RemoteIP()
+	ip := c.ClientIP()
 	addr := "局域网"
 	global.DB.Create(&LogModel{
 		IP:       ip,

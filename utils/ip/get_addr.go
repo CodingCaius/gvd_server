@@ -1,26 +1,10 @@
-package log_stash
+package ip
 
 import (
 	"fmt"
 	"gvd_server/global"
 	"net"
 )
-
-// FormatBytes 格式化输出字节单位
-func FormatBytes(size int64) string {
-	_size := float64(size)
-	uints := []string{"B", "KB", "MB", "GB", "TB", "PB"}
-	// 1
-	// 1025 1.0KB
-	//
-	var i int = 0
-	for _size >= 1024 && i < len(uints)-1 {
-		_size /= 1024
-		i++
-	}
-	return fmt.Sprintf("%.2f %s", _size, uints[i])
-
-}
 
 // ExternalIp 判断是否是外网地址
 func ExternalIp(ip string) (ok bool) {
@@ -40,8 +24,7 @@ func ExternalIp(ip string) (ok bool) {
 
 }
 
-// getAddr 根据给定的 IP 地址获取其所属的地址信息，包括国家、城市、省份
-func getAddr(ip string) (addr string) {
+func GetAddr(ip string) (addr string) {
 	if !ExternalIp(ip) {
 		return "内网地址"
 	}
