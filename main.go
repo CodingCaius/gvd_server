@@ -28,7 +28,7 @@ func main() {
 		return
 	}
 
-	//定时任务
+	//定时任务，同步文档数据
 	cron_service.CornInit()
 
 	router := routers.Routers()
