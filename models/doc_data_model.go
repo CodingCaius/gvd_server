@@ -1,4 +1,6 @@
-package models //统计文档访问量点赞量收藏量
+// 统计每天文档的点赞量，访问量，收藏量
+
+package models
 
 //文档数据表
 type DocDataModel struct {
