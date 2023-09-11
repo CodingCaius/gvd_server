@@ -5,6 +5,7 @@ import (
 	"gvd_server/models"
 	"gvd_server/plugins/log_stash"
 	"gvd_server/service/common/res"
+	"gvd_server/utils/ip"
 	"gvd_server/utils/jwts"
 	"gvd_server/utils/pwd"
 	"time"
@@ -71,14 +72,27 @@ func (UserApi) UserLoginView(c *gin.Context) {
 	c.Request.Header.Set("token", token)
 	log_stash.NewSuccessLogin(c)
 
-
-	log.SetItem("用户登录", "成功")
-	log.SetItem("token", token)
-	log.SetItem("数组", []string{"1", "oahnf"})
-	log.SetItem("对象", user)
-	log.SetItem("对象", map[string]any{"name": user.UserName, "age": 18})
-
 	global.DB.Model(&user).Update("lastLogin", time.Now())
+
+	_ip := c.ClientIP()
+	addr := ip.GetAddr(_ip)
+	ua := c.Request.Header.Get("User-Agent")
+
+	go func() {
+		// 加一条登录记录
+		err = global.DB.Create(&models.LoginModel{
+			UserID:   user.ID,
+			IP:       _ip,
+			NickName: user.NickName,
+			UA:       ua,
+			Token:    token,
+			Addr:     addr,
+		}).Error
+
+		if err != nil {
+			global.Log.Error(err)
+		}
+	}()
 
 	log.Info("用户登录成功")
 

@@ -57,6 +57,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/data/login_date": {
+            "get": {
+                "description": "用户登录数据",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "数据统计"
+                ],
+                "summary": "用户登录数据",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "0 七天内  1 一个月   2 一年",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/data_api.DataCountResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/data/look_date": {
             "get": {
                 "description": "文档浏览量数据",
@@ -93,7 +133,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/data_api.DataLookDateResponse"
+                                            "$ref": "#/definitions/data_api.DataCountResponse"
                                         }
                                     }
                                 }
@@ -1614,7 +1654,7 @@ const docTemplate = `{
                 }
             }
         },
-        "data_api.DataLookDateResponse": {
+        "data_api.DataCountResponse": {
             "type": "object",
             "properties": {
                 "countList": {

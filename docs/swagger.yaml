@@ -24,7 +24,7 @@ definitions:
         description: 网站名称
         type: string
     type: object
-  data_api.DataLookDateResponse:
+  data_api.DataCountResponse:
     properties:
       countList:
         items:
@@ -638,6 +638,29 @@ paths:
       summary: 用户信息
       tags:
       - 用户管理
+  /api/data/login_date:
+    get:
+      description: 用户登录数据
+      parameters:
+      - description: 0 七天内  1 一个月   2 一年
+        in: query
+        name: type
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/data_api.DataCountResponse'
+              type: object
+      summary: 用户登录数据
+      tags:
+      - 数据统计
   /api/data/look_date:
     get:
       description: 文档浏览量数据
@@ -660,7 +683,7 @@ paths:
             - $ref: '#/definitions/res.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/data_api.DataLookDateResponse'
+                  $ref: '#/definitions/data_api.DataCountResponse'
               type: object
       summary: 文档浏览量数据
       tags:
