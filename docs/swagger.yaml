@@ -24,6 +24,32 @@ definitions:
         description: 网站名称
         type: string
     type: object
+  data_api.DataLookDateResponse:
+    properties:
+      countList:
+        items:
+          type: integer
+        type: array
+      dateList:
+        items:
+          type: string
+        type: array
+    type: object
+  data_api.DataSumResponse:
+    properties:
+      diggCount:
+        description: 总点赞数
+        type: integer
+      docCount:
+        description: 总文档树
+        type: integer
+      lookCount:
+        description: 总浏览量
+        type: integer
+      userCount:
+        description: 总用户数
+        type: integer
+    type: object
   doc_api.DocContentResponse:
     properties:
       collCount:
@@ -612,6 +638,51 @@ paths:
       summary: 用户信息
       tags:
       - 用户管理
+  /api/data/look_date:
+    get:
+      description: 文档浏览量数据
+      parameters:
+      - description: 文档id，不传就是查全部的
+        in: query
+        name: docID
+        type: integer
+      - description: 0 七天内  1 一个月   2 一年
+        in: query
+        name: type
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/data_api.DataLookDateResponse'
+              type: object
+      summary: 文档浏览量数据
+      tags:
+      - 数据统计
+  /api/data/sum:
+    get:
+      description: 首页的求和数据
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/data_api.DataSumResponse'
+              type: object
+      summary: 首页的求和数据
+      tags:
+      - 数据统计
   /api/docs:
     post:
       description: 创建文档，创建成功之后，data=文档id

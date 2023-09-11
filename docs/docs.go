@@ -57,6 +57,84 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/data/look_date": {
+            "get": {
+                "description": "文档浏览量数据",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "数据统计"
+                ],
+                "summary": "文档浏览量数据",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "文档id，不传就是查全部的",
+                        "name": "docID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "0 七天内  1 一个月   2 一年",
+                        "name": "type",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/data_api.DataLookDateResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/data/sum": {
+            "get": {
+                "description": "首页的求和数据",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "数据统计"
+                ],
+                "summary": "首页的求和数据",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/data_api.DataSumResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/docs": {
             "post": {
                 "description": "创建文档，创建成功之后，data=文档id",
@@ -1533,6 +1611,44 @@ const docTemplate = `{
                 "title": {
                     "description": "网站名称",
                     "type": "string"
+                }
+            }
+        },
+        "data_api.DataLookDateResponse": {
+            "type": "object",
+            "properties": {
+                "countList": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "dateList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "data_api.DataSumResponse": {
+            "type": "object",
+            "properties": {
+                "diggCount": {
+                    "description": "总点赞数",
+                    "type": "integer"
+                },
+                "docCount": {
+                    "description": "总文档树",
+                    "type": "integer"
+                },
+                "lookCount": {
+                    "description": "总浏览量",
+                    "type": "integer"
+                },
+                "userCount": {
+                    "description": "总用户数",
+                    "type": "integer"
                 }
             }
         },
