@@ -9,6 +9,7 @@ import (
 	"gvd_server/api/role_doc_api"
 	"gvd_server/api/site_api"
 	"gvd_server/api/user_api"
+	"gvd_server/api/user_center_api"
 )
 
 //便于组织 api 模块的结构体
@@ -17,14 +18,15 @@ import (
 并且在应用程序中只需要一个全局变量来管理所有的 api 功能
 */
 type Api struct {
-	UserApi    user_api.UserApi
-	ImageApi   image_api.ImageApi
-	LogApi     log_api.LogApi
-	SiteApi    site_api.SiteApi
-	RoleApi    role_api.RoleApi
-	DocApi     doc_api.DocApi
-	RoleDocApi role_doc_api.RoleDocApi
-	DataApi    data_api.DataApi
+	UserApi       user_api.UserApi
+	ImageApi      image_api.ImageApi
+	LogApi        log_api.LogApi
+	SiteApi       site_api.SiteApi
+	RoleApi       role_api.RoleApi
+	DocApi        doc_api.DocApi
+	RoleDocApi    role_doc_api.RoleDocApi
+	DataApi       data_api.DataApi
+	UserCenterApi user_center_api.UserCenterApi
 }
 
 var App = new(Api)
