@@ -12,13 +12,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type DataLookDateResponse struct {
+type DataCountResponse struct {
 	DateList  []string `json:"dateList"`
 	CountList []int    `json:"countList"`
 }
 
+
+type DataCountRequest struct {
+	Type int `json:"type" form:"type"` // 0 七天内  1 一个月   2 一年
+}
+
 type DataLookDateRequest struct {
-	Type  int  `json:"type" form:"type"`   // 0 七天内  1 一个月   2 一年
+	DataCountRequest
 	DocID uint `json:"docID" form:"docID"` // 文档id，不传就是查全部的
 }
 
@@ -29,7 +34,7 @@ type DataLookDateRequest struct {
 // @Param data query DataLookDateRequest true "参数"
 // @Router /api/data/look_date [get]
 // @Produce json
-// @Success 200 {object} res.Response{data=DataLookDateResponse}
+// @Success 200 {object} res.Response{data=DataCountResponse}
 func (DataApi) DataLookDateView(c *gin.Context) {
 	// 声明一个DataLookDateRequest类型的变量cr
 	var cr DataLookDateRequest
@@ -48,7 +53,7 @@ func (DataApi) DataLookDateView(c *gin.Context) {
 	}
 
 	// 声明一个response变量
-	var response DataLookDateResponse
+	var response DataCountResponse
 	// 声明一个dateTypeNum变量
 	var dateTypeNum int
 
