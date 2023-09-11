@@ -7,18 +7,21 @@ import (
 	"gvd_server/service/redis_service"
 	"gvd_server/utils/jwts"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 type DocContentResponse struct {
-	Content   string `json:"content"`
-	IsSee     bool   `json:"isSee"`     // 是否试看
-	IsPwd     bool   `json:"isPwd"`     // 是否需要密码
-	IsColl    bool   `json:"isColl"`    // 用户是否收藏
-	LookCount int    `json:"lookCount"` // 浏览量
-	DiggCount int    `json:"diggCount"` // 点赞量
-	CollCount int    `json:"collCount"` // 收藏量
+	Content   string    `json:"content"`
+	IsSee     bool      `json:"isSee"`     // 是否试看
+	IsPwd     bool      `json:"isPwd"`     // 是否需要密码
+	IsColl    bool      `json:"isColl"`    // 用户是否收藏
+	LookCount int       `json:"lookCount"` // 浏览量
+	DiggCount int       `json:"diggCount"` // 点赞量
+	CollCount int       `json:"collCount"` // 收藏量
+	Title     string    `json:"title"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 // DocContentView 文档内容
@@ -69,18 +72,14 @@ func (DocApi) DocContentView(c *gin.Context) {
 		DiggCount: docDigg + doc.DiggCount,
 		LookCount: docLook + doc.LookCount,
 		CollCount: len(doc.UserCollDocList),
+		Title:     doc.Title,
+		CreatedAt: doc.CreatedAt,
 	}
 	// IsSee 这个角色是不是对这个文档有试看
 	// 正文分隔符
 	// 文档里面的试看内容
 	// 角色-文档的试看内容
 	// 试看部分 优先级：角色文档试看  > 文档试看字段 > 文档按照特殊字符分隔的试看
-
-
-
-
-
-
 
 	// 判断正文里面是不是有特殊分隔符
 	isDocFree := strings.Contains(doc.Content, global.DocSplitSign)

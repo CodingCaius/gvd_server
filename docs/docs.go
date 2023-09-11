@@ -1382,6 +1382,62 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/user_center/user_coll": {
+            "get": {
+                "description": "收藏文档列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "个人中心"
+                ],
+                "summary": "收藏文档列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "收藏文档或取消收藏",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "个人中心"
+                ],
+                "summary": "收藏文档或取消收藏",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/users": {
             "get": {
                 "description": "用户列表",
@@ -1702,6 +1758,9 @@ const docTemplate = `{
                 "content": {
                     "type": "string"
                 },
+                "createdAt": {
+                    "type": "string"
+                },
                 "diggCount": {
                     "description": "点赞量",
                     "type": "integer"
@@ -1721,6 +1780,9 @@ const docTemplate = `{
                 "lookCount": {
                     "description": "浏览量",
                     "type": "integer"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },

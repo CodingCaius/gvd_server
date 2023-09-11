@@ -57,6 +57,8 @@ definitions:
         type: integer
       content:
         type: string
+      createdAt:
+        type: string
       diggCount:
         description: 点赞量
         type: integer
@@ -72,6 +74,8 @@ definitions:
       lookCount:
         description: 浏览量
         type: integer
+      title:
+        type: string
     type: object
   doc_api.DocCreateRequest:
     properties:
@@ -1471,6 +1475,43 @@ paths:
       summary: 站点配置更新
       tags:
       - 站点配
+  /api/user_center/user_coll:
+    get:
+      description: 收藏文档列表
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 收藏文档列表
+      tags:
+      - 个人中心
+    post:
+      description: 收藏文档或取消收藏
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 收藏文档或取消收藏
+      tags:
+      - 个人中心
   /api/users:
     delete:
       description: 删除用户
