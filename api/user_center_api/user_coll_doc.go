@@ -14,6 +14,7 @@ import (
 // @Summary 收藏文档或取消收藏
 // @Description 收藏文档或取消收藏
 // @Param token header string true "token"
+// @Param data body models.IDRequest true "参数"
 // @Router /api/user_center/user_coll [post]
 // @Produce json
 // @Success 200 {object} res.Response{}

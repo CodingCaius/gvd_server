@@ -10,6 +10,12 @@ import (
 	"gvd_server/service/common/res"
 )
 
+type DocItemResponse struct {
+	Content string `json:"content"`
+	Title   string `json:"title"`
+}
+
+
 // DocEditContentView 获取完整的正文
 // @Tags 文档管理
 // @Summary 获取完整的正文
@@ -17,7 +23,7 @@ import (
 // @Param id path int true "id"
 // @Router /api/docs/edit/{id} [get]
 // @Produce json
-// @Success 200 {object} res.Response{}
+// @Success 200 {object} res.Response{data=DocItemResponse}
 func (DocApi) DocEditContentView(c *gin.Context) {
 	var cr models.IDRequest
 	err := c.ShouldBindUri(&cr)
@@ -31,5 +37,10 @@ func (DocApi) DocEditContentView(c *gin.Context) {
 		res.FailWithMsg("文档不存在", c)
 		return
 	}
-	res.OKWithData(doc.Content, c)
+
+	
+	res.OKWithData(DocItemResponse{
+		Title:   doc.Title,
+		Content: doc.Content,
+	}, c)
 }

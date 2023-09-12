@@ -62,7 +62,7 @@ func (RoleDocApi) RoleDocInfoUpdateView(c *gin.Context) {
 		roleDocInfo["pwd"] = &cr.RoleDocPwd
 	}
 	if cr.IsSee {
-		roleDocInfo["freeContent"] = &cr.RoleDocPwd
+		roleDocInfo["freeContent"] = &cr.FreeContent
 	}
 
 	// map空值的字段也会更新

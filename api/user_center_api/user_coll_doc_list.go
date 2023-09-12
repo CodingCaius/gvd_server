@@ -28,7 +28,7 @@ type UserCollDocListResponse struct {
 // @Param token header string true "token"
 // @Router /api/user_center/user_coll [get]
 // @Produce json
-// @Success 200 {object} res.Response{}
+// @Success 200 {object} res.Response{data=res.ListResponse[UserCollDocListResponse]}
 func (UserCenterApi) UserCollDocListView(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	claims, _ := jwts.ParseToken(token)

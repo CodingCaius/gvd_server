@@ -265,7 +265,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/res.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/doc_api.DocItemResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -687,6 +699,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/logout": {
+            "get": {
+                "description": "用户注销",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "用户注销",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/logs": {
             "get": {
                 "description": "日志列表",
@@ -754,6 +795,12 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "integer",
+                        "description": "登录状态查询  1  成功  2 失败",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
                         "enum": [
                             1,
                             2,
@@ -773,6 +820,12 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "根据用户id查询",
                         "name": "userID",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "查用户名",
+                        "name": "userName",
                         "in": "query"
                     },
                     {
@@ -1332,6 +1385,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/roles/id": {
+            "get": {
+                "description": "角色id列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "角色id列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.Options"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/site": {
             "get": {
                 "description": "站点配置查询",
@@ -1405,7 +1502,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/res.Response"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/res.ListResponse-user_center_api_UserCollDocListResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -1426,6 +1535,15 @@ const docTemplate = `{
                         "name": "token",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.IDRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -1463,6 +1581,11 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "roleID",
                         "in": "query"
                     },
                     {
@@ -1834,6 +1957,17 @@ const docTemplate = `{
                 }
             }
         },
+        "doc_api.DocItemResponse": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "doc_api.DocPwdRequest": {
             "type": "object",
             "properties": {
@@ -2049,6 +2183,43 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Options": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.RoleModel": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isSystem": {
+                    "description": "是否是系统角色",
+                    "type": "boolean"
+                },
+                "pwd": {
+                    "description": "统一设置这个角色所拥有的需要密码访问的文档的密码",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "角色的名称",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "models.UserModel": {
             "type": "object",
             "properties": {
@@ -2057,32 +2228,48 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "avatar": {
+                    "description": "头像",
                     "type": "string"
                 },
                 "createdAt": {
                     "type": "string"
                 },
                 "email": {
+                    "description": "邮箱",
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "ip": {
+                    "description": "ip",
                     "type": "string"
                 },
                 "lastLogin": {
-                    "description": "指明两个表的外键关系\nGORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息",
+                    "description": "用户最后登录时间",
                     "type": "string"
                 },
                 "nickName": {
+                    "description": "昵称",
                     "type": "string"
                 },
                 "roleID": {
                     "description": "用户对应的角色",
                     "type": "integer"
                 },
+                "roleModel": {
+                    "description": "用户角色信息",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.RoleModel"
+                        }
+                    ]
+                },
                 "updatedAt": {
+                    "type": "string"
+                },
+                "userName": {
+                    "description": "用户名",
                     "type": "string"
                 }
             }
@@ -2170,6 +2357,20 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/role_api.RoleListResponse"
+                    }
+                }
+            }
+        },
+        "res.ListResponse-user_center_api_UserCollDocListResponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/user_center_api.UserCollDocListResponse"
                     }
                 }
             }
@@ -2339,6 +2540,12 @@ const docTemplate = `{
         "role_doc_api.RoleDocListResponse": {
             "type": "object",
             "properties": {
+                "docIDList": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "list": {
                     "type": "array",
                     "items": {
@@ -2458,25 +2665,29 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "avatar": {
+                    "description": "头像",
                     "type": "string"
                 },
                 "createdAt": {
                     "type": "string"
                 },
                 "email": {
+                    "description": "邮箱",
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "ip": {
+                    "description": "ip",
                     "type": "string"
                 },
                 "lastLogin": {
-                    "description": "指明两个表的外键关系\nGORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息",
+                    "description": "用户最后登录时间",
                     "type": "string"
                 },
                 "nickName": {
+                    "description": "昵称",
                     "type": "string"
                 },
                 "role": {
@@ -2485,6 +2696,14 @@ const docTemplate = `{
                 "roleID": {
                     "description": "用户对应的角色",
                     "type": "integer"
+                },
+                "roleModel": {
+                    "description": "用户角色信息",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.RoleModel"
+                        }
+                    ]
                 },
                 "updatedAt": {
                     "type": "string"
@@ -2556,6 +2775,39 @@ const docTemplate = `{
                 "roleID": {
                     "description": "角色ID",
                     "type": "integer"
+                }
+            }
+        },
+        "user_center_api.UserCollDocListResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "什么时候收藏文档的",
+                    "type": "string"
+                },
+                "diggCount": {
+                    "description": "点赞量",
+                    "type": "integer"
+                },
+                "docID": {
+                    "description": "文档id",
+                    "type": "integer"
+                },
+                "docUpdateTime": {
+                    "description": "文档的更新时间",
+                    "type": "string"
+                },
+                "isPermission": {
+                    "description": "是否有文档的访问权限",
+                    "type": "boolean"
+                },
+                "lookCount": {
+                    "description": "浏览量",
+                    "type": "integer"
+                },
+                "title": {
+                    "description": "文档标题",
+                    "type": "string"
                 }
             }
         }

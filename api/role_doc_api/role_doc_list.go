@@ -19,6 +19,7 @@ type DocTree struct {
 
 type RoleDocListResponse struct {
 	List []DocTree `json:"list"`
+	DocIDList []uint `json:"docIDList"`
 }
 
 // RoleDocListView 文档树列表
@@ -41,10 +42,12 @@ func (RoleDocApi) RoleDocListView(c *gin.Context) {
 
 	// 根据 role_id 查找角色拥有哪些文档
 	var roleDocList []models.RoleDocModel
+	var docIDList = make([]uint, 0)
 	global.DB.
 		Preload("RoleModel").
 		Preload("DocModel").
-		Find(&roleDocList, "role_id = ?", id.ID)
+		Find(&roleDocList, "role_id = ?", id.ID).
+		Select("doc_id").Scan(&docIDList)
 	// 把所有文档给查出来
 	// 角色-密码
 	// 角色-试看
@@ -75,6 +78,7 @@ func (RoleDocApi) RoleDocListView(c *gin.Context) {
 
 	res.OKWithData(RoleDocListResponse{
 		List: list,
+		DocIDList: docIDList,
 	}, c)
 
 }

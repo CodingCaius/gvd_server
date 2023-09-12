@@ -109,6 +109,13 @@ definitions:
       updatedAt:
         type: string
     type: object
+  doc_api.DocItemResponse:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
   doc_api.DocPwdRequest:
     properties:
       docID:
@@ -258,32 +265,66 @@ definitions:
       id:
         type: integer
     type: object
+  models.Options:
+    properties:
+      label:
+        type: string
+      value:
+        type: integer
+    type: object
+  models.RoleModel:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      isSystem:
+        description: 是否是系统角色
+        type: boolean
+      pwd:
+        description: 统一设置这个角色所拥有的需要密码访问的文档的密码
+        type: string
+      title:
+        description: 角色的名称
+        type: string
+      updatedAt:
+        type: string
+    type: object
   models.UserModel:
     properties:
       addr:
         description: 地址
         type: string
       avatar:
+        description: 头像
         type: string
       createdAt:
         type: string
       email:
+        description: 邮箱
         type: string
       id:
         type: integer
       ip:
+        description: ip
         type: string
       lastLogin:
-        description: |-
-          指明两个表的外键关系
-          GORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息
+        description: 用户最后登录时间
         type: string
       nickName:
+        description: 昵称
         type: string
       roleID:
         description: 用户对应的角色
         type: integer
+      roleModel:
+        allOf:
+        - $ref: '#/definitions/models.RoleModel'
+        description: 用户角色信息
       updatedAt:
+        type: string
+      userName:
+        description: 用户名
         type: string
     type: object
   res.Code:
@@ -342,6 +383,15 @@ definitions:
       list:
         items:
           $ref: '#/definitions/role_api.RoleListResponse'
+        type: array
+    type: object
+  res.ListResponse-user_center_api_UserCollDocListResponse:
+    properties:
+      count:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/user_center_api.UserCollDocListResponse'
         type: array
     type: object
   res.Response:
@@ -459,6 +509,10 @@ definitions:
     type: object
   role_doc_api.RoleDocListResponse:
     properties:
+      docIDList:
+        items:
+          type: integer
+        type: array
       list:
         items:
           $ref: '#/definitions/role_doc_api.DocTree'
@@ -541,27 +595,33 @@ definitions:
         description: 地址
         type: string
       avatar:
+        description: 头像
         type: string
       createdAt:
         type: string
       email:
+        description: 邮箱
         type: string
       id:
         type: integer
       ip:
+        description: ip
         type: string
       lastLogin:
-        description: |-
-          指明两个表的外键关系
-          GORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息
+        description: 用户最后登录时间
         type: string
       nickName:
+        description: 昵称
         type: string
       role:
         type: string
       roleID:
         description: 用户对应的角色
         type: integer
+      roleModel:
+        allOf:
+        - $ref: '#/definitions/models.RoleModel'
+        description: 用户角色信息
       updatedAt:
         type: string
       userName:
@@ -610,6 +670,30 @@ definitions:
     - id
     - password
     - roleID
+    type: object
+  user_center_api.UserCollDocListResponse:
+    properties:
+      createdAt:
+        description: 什么时候收藏文档的
+        type: string
+      diggCount:
+        description: 点赞量
+        type: integer
+      docID:
+        description: 文档id
+        type: integer
+      docUpdateTime:
+        description: 文档的更新时间
+        type: string
+      isPermission:
+        description: 是否有文档的访问权限
+        type: boolean
+      lookCount:
+        description: 浏览量
+        type: integer
+      title:
+        description: 文档标题
+        type: string
     type: object
 host: 127.0.0.1:8000
 info:
@@ -840,7 +924,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/res.Response'
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/doc_api.DocItemResponse'
+              type: object
       summary: 获取完整的正文
       tags:
       - 文档管理
@@ -1031,6 +1120,25 @@ paths:
       summary: 用户登录
       tags:
       - 用户管理
+  /api/logout:
+    get:
+      description: 用户注销
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 用户注销
+      tags:
+      - 用户管理
   /api/logs:
     delete:
       description: 删除日志
@@ -1096,6 +1204,10 @@ paths:
       - in: query
         name: sort
         type: string
+      - description: 登录状态查询  1  成功  2 失败
+        in: query
+        name: status
+        type: integer
       - description: 日志的类型   1 登录日志  2 操作日志  3 运行日志
         enum:
         - 1
@@ -1112,6 +1224,10 @@ paths:
         in: query
         name: userID
         type: integer
+      - description: 查用户名
+        in: query
+        name: userName
+        type: string
       - description: token
         in: header
         name: token
@@ -1445,6 +1561,32 @@ paths:
       summary: 更新角色
       tags:
       - 角色管理
+  /api/roles/id:
+    get:
+      description: 角色id列表
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Options'
+                  type: array
+              type: object
+      summary: 角色id列表
+      tags:
+      - 角色管理
   /api/site:
     get:
       description: 站点配置查询
@@ -1490,7 +1632,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/res.Response'
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/res.ListResponse-user_center_api_UserCollDocListResponse'
+              type: object
       summary: 收藏文档列表
       tags:
       - 个人中心
@@ -1502,6 +1649,12 @@ paths:
         name: token
         required: true
         type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.IDRequest'
       produces:
       - application/json
       responses:
@@ -1543,6 +1696,9 @@ paths:
         type: integer
       - in: query
         name: page
+        type: integer
+      - in: query
+        name: roleID
         type: integer
       - in: query
         name: sort
