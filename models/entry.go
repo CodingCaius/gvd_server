@@ -29,3 +29,8 @@ type IDListRequest struct {
 type IDRequest struct {
 	ID uint `json:"id" form:"id" uri:"id"`
 }
+
+type Options struct {
+	Label string `json:"label"`
+	Value int    `json:"value"`
+}

@@ -9,7 +9,7 @@ import (
 )
 
 func DB() {
-	err := global.DB.Set("gorm:table_options", "ENGINE=InnoDB").
+	err := global.DB.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci").
 		AutoMigrate(
 			&models.UserModel{},
 			&models.RoleModel{},

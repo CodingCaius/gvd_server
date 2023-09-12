@@ -13,12 +13,14 @@ import (
 
 type LogListRequest struct {
 	models.Pagination
-	Level  log_stash.Level   `json:"level" form:"level"`   // 日志查询的等级
-	Type   log_stash.LogType `json:"type" form:"type"`     // 日志的类型   1 登录日志  2 操作日志  3 运行日志
-	IP     string            `json:"ip" form:"ip"`         // 根据ip查询
-	UserID uint              `json:"userID" form:"userID"` // 根据用户id查询
-	Addr   string            `json:"addr" form:"addr"`     // 感觉地址查询
-	Date   string            `json:"date" form:"date"`     // 查某一天，格式是年-月-日
+	Level    log_stash.Level   `json:"level" form:"level"`       // 日志查询的等级
+	Type     log_stash.LogType `json:"type" form:"type"`         // 日志的类型   1 登录日志  2 操作日志  3 运行日志
+	IP       string            `json:"ip" form:"ip"`             // 根据ip查询
+	UserID   uint              `json:"userID" form:"userID"`     // 根据用户id查询
+	Addr     string            `json:"addr" form:"addr"`         // 感觉地址查询
+	Date     string            `json:"date" form:"date"`         // 查某一天，格式是年-月-日
+	Status   int               `json:"status" form:"status"`     // 登录状态查询  1  成功  2 失败
+	UserName string            `json:"userName" form:"userName"` // 查用户名
 }
 
 // LogListView 日志列表 可根据type level 搜索日志
@@ -44,16 +46,24 @@ func (LogApi) LogListView(c *gin.Context) {
 		query.Where("date(createdAt) = ?", cr.Date)
 	}
 
+	if cr.Status == 1 {
+		query.Where("status = ?", true)
+	}
+	if cr.Status == 2 {
+		query.Where("status = ?", false)
+	}
+
 	_list, count, _ := list.QueryList(log_stash.LogModel{
 		Type:   cr.Type,
 		Level:  cr.Level,
 		IP:     cr.IP,
 		UserID: cr.UserID,
 		Addr:   cr.Addr,
+		UserName: cr.UserName,
 	}, list.Option{
 		Pagination: cr.Pagination,
-		Where: query,
-		Likes: []string{"title", "userName"},
+		Where:      query,
+		Likes:      []string{"title", "userName"},
 	})
 	res.OKWithList(_list, count, c)
 }

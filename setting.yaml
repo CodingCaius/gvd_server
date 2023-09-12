@@ -16,18 +16,19 @@ redis:
   password: ""
   poolSize: 100
 es:
-    addr: "http://127.0.0.1:9200"
-    user: elastic
-    password: q3085481534
+  addr: "http://127.0.0.1:9200"
+  user: elastic
+  password: q3085481534
 jwt:
   expires: 8
   issuer: "caius"
   secret: "dsivOBlvsnJv"
 site:
-    title: 哈哈哈
-    icon: xx
-    abstract: ""
-    iconHref: ""
-    href: ""
-    footer: ""
-    content: xxxx
+  title:
+  icon:
+  abstract: |-
+    简介
+  iconHref:
+  href: ""
+  footer: ""
+  content: "1233"

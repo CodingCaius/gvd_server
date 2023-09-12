@@ -15,4 +15,6 @@ func (router RouterGroup) RoleRouter() {
 	r.POST("", app.RoleCreateView)   // 角色添加
 	r.PUT("", app.RoleUpdateView)    // 角色更新
 	r.DELETE("", app.RoleRemoveView) // 角色删除
+
+	r.GET("/id", app.RoleIDListView)
 }

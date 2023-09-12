@@ -10,6 +10,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UserLogoutView 用户注销
+// @Tags 用户管理
+// @Summary 用户注销
+// @Description 用户注销
+// @Param token header string true "token"
+// @Router /api/logout [get]
+// @Produce json
+// @Success 200 {object} res.Response{}
 func (UserApi) UserLogoutView(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	claims, _ := jwts.ParseToken(token)

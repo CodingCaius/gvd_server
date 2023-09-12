@@ -61,7 +61,7 @@ func UserRemoveService(user models.UserModel) (err error) {
 
     // UserCollDocModel 连带删除
     var userCollList []models.UserCollDocModel
-    tx.Find(&userCollList, "userID = ?", user.ID)
+    tx.Find(&userCollList, "user_id = ?", user.ID)
     if len(userCollList) > 0 {
       err = tx.Delete(&userCollList).Error
       if err != nil {
@@ -70,7 +70,7 @@ func UserRemoveService(user models.UserModel) (err error) {
     }
     // UserPwdDocModel 连带删除
     var userPwdList []models.UserPwdDocModel
-    tx.Find(&userPwdList, "userID = ?", user.ID)
+    tx.Find(&userPwdList, "user_id = ?", user.ID)
     if len(userPwdList) > 0 {
       err = tx.Delete(&userPwdList).Error
       if err != nil {
