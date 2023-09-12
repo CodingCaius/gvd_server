@@ -1,6 +1,0 @@
-[2023-07-27 20:25:28] [36m[info][0m main.go:13 main.main test1
-[2023-07-27 20:25:28] [33m[warning][0m main.go:14 main.main test2
-[2023-07-27 20:25:28] [31m[error][0m main.go:15 main.main test3
-[2023-07-27 20:26:27] [36m[info][0m main.go:13 main.main test1
-[2023-07-27 20:26:27] [33m[warning][0m main.go:14 main.main test2
-[2023-07-27 20:26:27] [31m[error][0m main.go:15 main.main test3
