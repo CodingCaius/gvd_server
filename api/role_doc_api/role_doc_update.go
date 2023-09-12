@@ -4,6 +4,7 @@ import (
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/service/common/res"
+	"gvd_server/service/redis_service"
 	"gvd_server/utils/set"
 
 	"github.com/gin-gonic/gin"
@@ -92,6 +93,10 @@ func (RoleDocApi) RoleDocUpdateView(c *gin.Context) {
 			"sort": doc.Sort,
 		})
 	}
+
+	redis_service.ClearDocDocTree()
+	redis_service.ClearDocContent()
+
 	res.OKWithMsg("角色文档更新成功", c)
 
 }

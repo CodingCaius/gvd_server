@@ -1,16 +1,17 @@
-
 // 用于文档密码校验
 // 输入密码 查看文档
 
 package doc_api
 
 import (
-	"github.com/gin-gonic/gin"
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/service/common/res"
+	"gvd_server/service/redis_service"
 	"gvd_server/utils/jwts"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type DocPwdRequest struct {
@@ -60,7 +61,6 @@ func (DocApi) DocPwdView(c *gin.Context) {
 		return
 	}
 
-
 	// 先将密码设置为角色密码
 	// 如果角色文档表有密码的话，赋值为角色文档表的密码
 	pwd := roleDoc.RoleModel.Pwd
@@ -74,7 +74,6 @@ func (DocApi) DocPwdView(c *gin.Context) {
 	}
 	var content = strings.ReplaceAll(roleDoc.DocModel.Content, global.DocSplitSign, "") // 实际正文
 
-
 	if claims != nil {
 		// 加入到用户密码文档表
 		global.DB.Create(&models.UserPwdDocModel{
@@ -83,7 +82,7 @@ func (DocApi) DocPwdView(c *gin.Context) {
 		})
 	}
 
-	var response = DocContentResponse{
+	var response = redis_service.DocContentResponse{
 		Content: content,
 	}
 

@@ -6,16 +6,17 @@
 // 然后通过最大字符前缀匹配，将除根文档外的其他文档插入到对应的父文档中
 // 5,最后将角色文档树转化为特定类型 RoleDocTreeResponse，便于响应
 
-
 package role_doc_api
 
 import (
-	"github.com/gin-gonic/gin"
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/service/common/res"
+	"gvd_server/service/redis_service"
 	"gvd_server/utils"
 	"gvd_server/utils/jwts"
+
+	"github.com/gin-gonic/gin"
 )
 
 type RoleDocTree struct {
@@ -29,7 +30,7 @@ type RoleDocTree struct {
 }
 
 type RoleDocTreeResponse struct {
-	List []RoleDocTree `json:"list"`
+	List []redis_service.RoleDocTree `json:"list"`
 }
 
 // RoleDocTreeView 角色文档树
@@ -46,12 +47,22 @@ func (RoleDocApi) RoleDocTreeView(c *gin.Context) {
 
 	var roleID uint = 2 // 默认给一个访客角色
 
+	var userID uint = 0
+
 	if err == nil {
 		roleID = claims.RoleID
+		userID = claims.UserID
 	}
 
 	var response = RoleDocTreeResponse{
-		List: make([]RoleDocTree, 0),
+		List: make([]redis_service.RoleDocTree, 0),
+	}
+
+	docTree, ok := redis_service.GetRoleDocTree(roleID, userID)
+	if ok {
+		response.List = docTree
+		res.OKWithData(response, c)
+		return
 	}
 
 	var docIDList []uint
@@ -97,7 +108,7 @@ func (RoleDocApi) RoleDocTreeView(c *gin.Context) {
 	for _, model := range roleDocList {
 		// 判断有密码
 		// 角色文档的 密码 优先级更大
-	    // 如果文档开启了密码，角色文档本身没有，那就用角色的密码
+		// 如果文档开启了密码，角色文档本身没有，那就用角色的密码
 		// model.Pwd不为nil，说明密码按键已打开，在角色文档表中，密码可能为空，也可能填写有密码
 		if model.Pwd != nil && (*model.Pwd != "" || model.RoleModel.Pwd != "") {
 			docPwdMap[model.DocID] = true
@@ -136,14 +147,14 @@ func (RoleDocApi) RoleDocTreeView(c *gin.Context) {
 
 // 将文档模型的扁平列表转换为一个有层次结构的树，其中每个文档模型可以包含子文档，以及其他与文档相关的属性
 // RoleDocTreeTransition 角色文档树 转换为特定类型
-func RoleDocTreeTransition(docList []*models.DocModel, docPwdMap, docSeeMap, docCollMap, unLockMap map[uint]bool) (list []RoleDocTree) {
+func RoleDocTreeTransition(docList []*models.DocModel, docPwdMap, docSeeMap, docCollMap, unLockMap map[uint]bool) (list []redis_service.RoleDocTree) {
 	for _, model := range docList {
 		// 递归调用 RoleDocTreeTransition 函数，以处理当前文档模型的子文档，并将结果存储在 children 中
 		children := RoleDocTreeTransition(model.Child, docPwdMap, docSeeMap, docCollMap, unLockMap)
 		if children == nil {
-			children = make([]RoleDocTree, 0)
+			children = make([]redis_service.RoleDocTree, 0)
 		}
-		docTree := RoleDocTree{
+		docTree := redis_service.RoleDocTree{
 			ID:       model.ID,
 			Title:    model.Title,
 			Children: children,

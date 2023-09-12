@@ -6,6 +6,7 @@ import (
 	"gvd_server/plugins/log_stash"
 	"gvd_server/service/common/res"
 	"gvd_server/service/full_search_service"
+	"gvd_server/service/redis_service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -71,6 +72,8 @@ func (DocApi) DocUpdateView(c *gin.Context) {
 	if oldContent != doc.Content || oldTitle != doc.Title {
 		go full_search_service.FullSearchUpdate(doc)
 	}
+
+	redis_service.ClearDocContent()
 
 	res.OKWithMsg("文档更新成功", c)
 }

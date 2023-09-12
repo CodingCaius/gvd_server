@@ -7,22 +7,9 @@ import (
 	"gvd_server/service/redis_service"
 	"gvd_server/utils/jwts"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
-
-type DocContentResponse struct {
-	Content   string    `json:"content"`
-	IsSee     bool      `json:"isSee"`     // 是否试看
-	IsPwd     bool      `json:"isPwd"`     // 是否需要密码
-	IsColl    bool      `json:"isColl"`    // 用户是否收藏
-	LookCount int       `json:"lookCount"` // 浏览量
-	DiggCount int       `json:"diggCount"` // 点赞量
-	CollCount int       `json:"collCount"` // 收藏量
-	Title     string    `json:"title"`
-	CreatedAt time.Time `json:"createdAt"`
-}
 
 // DocContentView 文档内容
 // @Tags 文档管理
@@ -43,10 +30,19 @@ func (DocApi) DocContentView(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	claims, err := jwts.ParseToken(token)
 	var roleID uint = 2 // 访客
+	var userID uint = 0
+
 	if err == nil {
-		// 说明登录了
 		roleID = claims.RoleID
+		userID = claims.UserID
 	}
+
+	docContent, ok := redis_service.GetDocContent(roleID, cr.ID, userID)
+	if ok {
+		res.OKWithData(docContent, c)
+		return
+	}
+
 	// 判断角色是否有这个文档的访问权限
 	var roleDoc models.RoleDocModel
 	err = global.DB.
@@ -68,7 +64,7 @@ func (DocApi) DocContentView(c *gin.Context) {
 	docDigg := redis_service.NewDocDigg().GetById(doc.ID)
 	docLook := redis_service.NewDocLook().GetById(doc.ID)
 
-	var response = DocContentResponse{
+	var response = redis_service.DocContentResponse{
 		DiggCount: docDigg + doc.DiggCount,
 		LookCount: docLook + doc.LookCount,
 		CollCount: len(doc.UserCollDocList),
@@ -147,6 +143,8 @@ func (DocApi) DocContentView(c *gin.Context) {
 	if !response.IsPwd && !response.IsSee {
 		response.Content = content
 	}
+
+	redis_service.SetDocContent(roleID, cr.ID, userID, response)
 
 	res.OKWithData(response, c)
 }

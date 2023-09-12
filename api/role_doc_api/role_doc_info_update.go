@@ -4,6 +4,7 @@ import (
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/service/common/res"
+	"gvd_server/service/redis_service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -67,6 +68,9 @@ func (RoleDocApi) RoleDocInfoUpdateView(c *gin.Context) {
 
 	// map空值的字段也会更新
 	global.DB.Model(&roleDoc).Updates(roleDocInfo)
+
+	redis_service.ClearDocDocTree()
+	redis_service.ClearDocContent()
 
 	res.OKWithMsg("文档更新成功", c)
 
