@@ -74,10 +74,10 @@ func (DocApi) DocPwdView(c *gin.Context) {
 	}
 	var content = strings.ReplaceAll(roleDoc.DocModel.Content, global.DocSplitSign, "") // 实际正文
 
-	
+
 	if claims != nil {
 		// 加入到用户密码文档表
-		global.DB.Create(models.UserPwdDocModel{
+		global.DB.Create(&models.UserPwdDocModel{
 			UserID: claims.UserID,
 			DocID:  cr.DocID,
 		})
