@@ -1,10 +1,12 @@
 # gvd_server
 gin-vue-doc 前后端分离的文档系统
-# 目录结构
 
 
-```
-.
+
+## 项目结构
+<details>
+<summary>展开查看</summary>
+<pre><code>
 ├── api
 │   ├── data_api
 │   │   ├── data_login_date.go
@@ -165,12 +167,6 @@ gin-vue-doc 前后端分离的文档系统
 │       └── redis_role_doc_tree.go
 ├── setting.yaml
 ├── testdata
-│   ├── 定时任务
-│   │   └── main.go
-│   ├── 日志样式
-│   │   └── 日志样式.html
-│   ├── 生成jwt.go
-│   └── 通过ip地址算物理地址.go
 ├── uploads
 └── utils
     ├── file
@@ -192,4 +188,6 @@ gin-vue-doc 前后端分离的文档系统
     ├── utils.go
     └── valid
         └── valid.go
-```
+</pre></code>
+</details>
+
