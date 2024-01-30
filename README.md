@@ -36,7 +36,7 @@ gin-vue-doc 前后端分离的文档系统
 ## 表结构
 <details>
 <summary>展开查看</summary>
-![20230803113621](https://github.com/CodingCaius/gvd_server/assets/98575760/0f39d1b8-4399-4b92-a8fc-dcc43e52a0f5)
+![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/20230803113621.png)
 
 ### 角色表
 
