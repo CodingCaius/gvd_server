@@ -4,191 +4,208 @@ gin-vue-doc 前后端分离的文档系统
 
 
 
-## 项目结构
+## 项目目录
 <details>
 <summary>展开查看</summary>
 <pre><code>
-├── api
-│   ├── data_api
-│   │   ├── data_login_date.go
-│   │   ├── data_look_date.go
-│   │   ├── data_sum.go
-│   │   └── entry.go
-│   ├── doc_api
-│   │   ├── doc_content.go
-│   │   ├── doc_create.go
-│   │   ├── doc_digg.go
-│   │   ├── doc_edit_content.go
-│   │   ├── doc_info.go
-│   │   ├── doc_pwd.go
-│   │   ├── doc_remove.go
-│   │   ├── doc_search.go
-│   │   ├── doc_update.go
-│   │   └── entry.go
-│   ├── entry.go
-│   ├── image_api
-│   │   ├── entry.go
-│   │   ├── image_list.go
-│   │   ├── image_remove.go
-│   │   └── image_update.go
-│   ├── log_api
-│   │   ├── entry.go
-│   │   ├── log_list.go
-│   │   ├── log_read.go
-│   │   └── log_remove.go
-│   ├── role_api
-│   │   ├── entry.go
-│   │   ├── role_create.go
-│   │   ├── role_id_list.go
-│   │   ├── role_list.go
-│   │   ├── role_remove.go
-│   │   └── role_update.go
-│   ├── role_doc_api
-│   │   ├── entry.go
-│   │   ├── role_doc_create.go
-│   │   ├── role_doc_info.go
-│   │   ├── role_doc_info_update.go
-│   │   ├── role_doc_list.go
-│   │   ├── role_doc_remove.go
-│   │   ├── role_doc_tree.go
-│   │   └── role_doc_update.go
-│   ├── site_api
-│   │   ├── entry.go
-│   │   ├── site_detail.go
-│   │   └── site_update.go
-│   ├── user_api
-│   │   ├── entry.go
-│   │   ├── user_create.go
-│   │   ├── user_info.go
-│   │   ├── user_list.go
-│   │   ├── user_login.go
-│   │   ├── user_logout.go
-│   │   ├── user_remove.go
-│   │   ├── user_update.go
-│   │   ├── user_update_info.go
-│   │   └── user_update_password.go
-│   └── user_center_api
-│       ├── entry.go
-│       ├── user_coll_doc.go
-│       └── user_coll_doc_list.go
-├── config
-│   ├── config_es.go
-│   ├── config_jwt.go
-│   ├── config_mysql.go
-│   ├── config_redis.go
-│   ├── config_site.go
-│   ├── config_system.go
-│   └── enter.go
-├── core
-│   ├── init_addr_db.go
-│   ├── init_es.go
-│   ├── init_logrus.go
-│   ├── init_mysql.go
-│   ├── init_redis.go
-│   └── setting.go
-├── docs
-│   ├── docs.go
-│   ├── swagger.json
-│   └── swagger.yaml
-├── flags
-│   ├── entry.go
-│   ├── flag_es_index.go
-│   ├── flags_db.go
-│   ├── flags_dump.go
-│   ├── flags_es_dump.go
-│   ├── flags_es_load.go
-│   ├── flags_load.go
-│   └── flags_port.go
-├── global
-│   └── global.go
-├── go.mod
+├── api             通过api接口调用方法
+├── config          配置文件中映射的结构体
+├── core            初始化连接的一些操作
+├── docs            swagger api文档
+├── flags           命令行参数绑定
+├── global          全局变量
+├── go.mod        
 ├── go.sum
-├── logs
-├── main
-├── main.go
-├── middleware
-│   ├── jwt_admin.go
-│   ├── jwt_auth.go
-│   └── log_middleware.go
-├── models
-│   ├── doc_data_model.go
-│   ├── doc_model.go
-│   ├── entry.go
-│   ├── full_text_model.go
-│   ├── image_model.go
-│   ├── login_model.go
-│   ├── role_doc_model.go
-│   ├── role_model.go
-│   ├── user_coll_doc_model.go
-│   ├── user_model.go
-│   └── user_pwd_doc_model.go
-├── plugins
-│   └── log_stash
-│       ├── level.go
-│       ├── log_type.go
-│       ├── model.go
-│       ├── parse_token.go
-│       ├── set_action.go
-│       ├── set_login.go
-│       ├── set_runtime.go
-│       └── utils.go
-├── routers
-│   ├── data_router.go
-│   ├── doc_router.go
-│   ├── enter.go
-│   ├── image_router.go
-│   ├── log_router.go
-│   ├── role_doc_router.go
-│   ├── role_router.go
-│   ├── site_router.go
-│   ├── user_center_router.go
-│   └── user_router.go
-├── service
-│   ├── common
-│   │   ├── list
-│   │   │   └── query_list.go
-│   │   └── res
-│   │       └── entry.go
-│   ├── cron_service
-│   │   ├── entry.go
-│   │   ├── sync_doc_data_date.go
-│   │   └── sync_doc_data.go
-│   ├── es_service
-│   │   └── indexs
-│   │       └── entry.go
-│   ├── full_search_service
-│   │   ├── full_search_create.go
-│   │   ├── full_search_delete.go
-│   │   ├── full_search_update.go
-│   │   └── markdown_parse.go
-│   └── redis_service
-│       ├── redis_count.go
-│       ├── redis_doc_content.go
-│       ├── redis_logout.go
-│       └── redis_role_doc_tree.go
-├── setting.yaml
-├── testdata
-├── uploads
-└── utils
-    ├── file
-    │   └── format_bytes.go
-    ├── hash
-    │   └── md5.go
-    ├── ip
-    │   └── get_addr.go
-    ├── jwts
-    │   ├── entry.go
-    │   ├── generate_token.go
-    │   └── parse_token.go
-    ├── pwd
-    │   └── pwd.go
-    ├── set
-    │   ├── set_sub2.go
-    │   ├── set_sub.go
-    │   └── set_union.go
-    ├── utils.go
-    └── valid
-        └── valid.go
+├── logs             日志文件
+├── main.go          主函数
+├── middleware       gin 的中间件
+├── models           表结构
+├── plugins          插件
+├── routers          路由
+├── service          服务
+├── setting.yaml     配置文件
+├── testdata         测试用例
+├── uploads          上传的文件
+└── utils            一些工具
+  
 </pre></code>
 </details>
 
+
+
+## 表结构
+<details>
+<summary>展开查看</summary>
+![20230803113621](https://github.com/CodingCaius/gvd_server/assets/98575760/0f39d1b8-4399-4b92-a8fc-dcc43e52a0f5)
+
+### 角色表
+
+```Go
+package models
+
+type RoleModel struct {
+  Model
+  Title    string     `gorm:"size:16;not null;comment:角色名称" json:"title"`                                    // 角色的名称
+  Pwd      string     `gorm:"size:64;comment:角色的密码" json:"-"`                                                // 角色密码
+  IsSystem bool       `gorm:"column:isSystem;comment:是否是系统角色" json:"isSystem"`                               // 是否是系统角色
+  DocsList []DocModel `gorm:"many2many:role_doc_models;joinForeignKey:RoleID;JoinReferences:DocID" json:"-"` // 角色拥有的文档列表
+}
+
+```
+
+
+
+### 文档表
+
+```Go
+package models
+
+type DocModel struct {
+  Model
+  Title           string      `gorm:"comment:文档标题" json:"title"`
+  Content         string      `gorm:"comment:文档内容" json:"-"`
+  DiggCount       int         `gorm:"comment:点赞量;column:diggCount" json:"diggCount"`
+  LookCount       int         `gorm:"comment:浏览量;column:lookCount" json:"lookCount"`
+  Key             string      `gorm:"comment:key;not null;unique" json:"key"`
+  ParentID        *uint       `gorm:"comment:父文档id;column:parentID" json:"parentID"`
+  ParentModel     *DocModel   `gorm:"foreignKey:ParentID" json:"-"` // 父文档
+  Child           []*DocModel `gorm:"foreignKey:ParentID" json:"-"` // 它会有子孙文档
+  FreeContent     string      `gorm:"comment:预览部分;column:freeContent" json:"freeContent"`
+  UserCollDocList []UserModel `gorm:"many2many:user_coll_doc_models;joinForeignKey:DocID;JoinReferences:UserID" json:"-"`
+}
+
+```
+
+### 角色文档表
+
+```Go
+package models
+
+type RoleDocModel struct {
+  Model
+  RoleID      uint      `gorm:"column:roleID;comment:角色id" json:"roleID"`
+  RoleModel   RoleModel `gorm:"foreignKey:RoleID" json:"-"`
+  DocID       uint      `gorm:"column:docID;comment:文档id" json:"docID"`
+  DocModel    DocModel  `gorm:"foreignKey:DocID" json:"-"`
+  Pwd         *string   `gorm:"column:pwd;comment:密码配置" json:"pwd"`                 // null ""  "有值"  优先级： 角色文档密码 > 角色密码
+  FreeContent *string   `gorm:"column:freeContent;comment:试看配置" json:"freeContent"` // 试看部分 优先级：角色文档试看  > 文档试看字段 > 文档按照特殊字符分隔的试看
+  Sort        int       `gorm:"column:sort;comment:排序" json:"sort"`                 // 排序
+}
+
+```
+
+
+
+### 用户表
+
+```Go
+package models
+
+type UserModel struct {
+  Model
+  UserName  string    `gorm:"column:userName;size:36;unique;not null;comment:用户名" json:"-"` // 用户名
+  Password  string    `gorm:"column:password;size:128;comment:密码"  json:"-"`                // 密码
+  Avatar    string    `gorm:"column:avatar;size:256;comment:头像"  json:"avatar"`             // 头像
+  NickName  string    `gorm:"column:nickName;size:36;comment:昵称"  json:"nickName"`          // 昵称
+  Email     string    `gorm:"column:email;size:128;comment:邮箱"  json:"email"`               // 邮箱
+  Token     string    `gorm:"column:token;size:64;comment:其他平台的唯一id"  json:"-"`             // 其他平台的唯一id
+  IP        string    `gorm:"column:ip;size:16;comment:ip地址"  json:"ip"`                    // ip
+  Addr      string    `gorm:"column:addr;size:64;comment:地址"  json:"addr"`                  // 地址
+  RoleID    uint      `gorm:"column:roleID;comment:用户对应的角色" json:"roleID"`                  // 用户对应的角色
+  RoleModel RoleModel `gorm:"foreignKey:RoleID" json:"-"`
+}
+
+```
+
+### 用户收藏文档表
+
+```Go
+package models
+
+type UserCollDocModel struct {
+  Model
+  DocID     uint      `gorm:"column:docID" json:"docID"`
+  DocModel  DocModel  `gorm:"foreignKey:DocID"`
+  UserID    uint      `gorm:"column:userID" json:"userID"`
+  UserModel UserModel `gorm:"foreignKey:UserID"`
+}
+
+```
+
+
+
+### 用户密码访问文档表
+
+```Go
+package models
+
+type UserPwdDocModel struct {
+  Model
+  UserID uint `gorm:"column:userID" json:"userID"`
+  DocID  uint `gorm:"column:docID" json:"docID"`
+}
+
+```
+
+### 图像表
+
+```Go
+package models
+
+import "fmt"
+
+type ImageModel struct {
+  Model
+  UserID    uint      `gorm:"column:userID;comment:用户id" json:"userID"`
+  UserModel UserModel `gorm:"foreignKey:UserID" json:"-"`
+  FileName  string    `gorm:"column:fileName;size:64；comment:文件名" json:"fileName"`
+  Size      int64     `gorm:"column:size;comment:文件大小，单位字节" json:"size"`
+  Path      string    `gorm:"column:path;size:128;comment:文件路径" json:"path"`
+  Hash      string    `gorm:"column:hash;size:64;comment:文件的hash" json:"hash"`
+}
+
+func (image ImageModel) WebPath() string {
+  return fmt.Sprintf("/%s", image.Path)
+}
+
+```
+
+### 登录记录表
+
+```Go
+package models
+
+// LoginModel 用户登录数据
+type LoginModel struct {
+  Model
+  UserID    uint      `gorm:"column:userID" json:"userID"`
+  UserModel UserModel `gorm:"foreignKey:UserID" json:"-"`
+  IP        string    `gorm:"size:20" json:"ip"` // 登录的ip
+  NickName  string    `gorm:"column:nickName;size:42" json:"nickName"`
+  UA        string    `gorm:"size:256" json:"ua"` // ua
+  Token     string    `gorm:"size:256" json:"token"`
+  Device    string    `gorm:"size:256" json:"device"` // 登录设备
+  Addr      string    `gorm:"size:64" json:"addr"`
+}
+
+```
+
+### 文档数据表
+
+```Go
+package models
+
+// DocDataModel 文档数据表
+type DocDataModel struct {
+  Model
+  DocID     uint   `gorm:"column:docID" json:"docID"`
+  DocTitle  string `gorm:"column:docTitle" json:"docTitle"`
+  LookCount int    `gorm:"column:lookCount" json:"lookCount"`
+  DiggCount int    `gorm:"column:diggCount" json:"diggCount"`
+  CollCount int    `gorm:"column:collCount" json:"collCount"`
+}
+
+```
+
+
+</details>
