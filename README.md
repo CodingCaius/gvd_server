@@ -5,15 +5,15 @@
 ## 使用的技术
 
 - Golang 1.20
-- gin  v1.9.1
-- gorm   v1.25.2
 - MySQL 5.6.50
 - Redis  6.2.11
-- jwt  "github.com/dgrijalva/jwt-go/v4"
-- swagger  v1.8.12
-- logrus  v1.9.3
-- es
-- docker
+- Gin
+- Gorm
+- Jwt  
+- Swagger
+- logrus 
+- ElasticSearch
+- Docker
 
 ## 主要功能
 
@@ -23,8 +23,8 @@
 - 文档加密和预览，不同用户可设置不同的文档密码，及设置文档的预览部分
 - 日志管理，每天的登录和操作日志放进一个 log 中，err 级别的日志放入单独的文件中
 - 图片管理，可上传或删除图片，并限制图片的格式和大小
-- 缓存管理，在 redis 中添加文档及其浏览量的缓存
-- 站点配置，网站首页显示的内容
+- 缓存管理，在 redis 中添加token，文档及其浏览量的缓存，
+- 中间件管理，包括用户登录中间件，超级管理员鉴权中间件，日志中间件
 - 全文搜索，通过 ElasticSearch 实现全文搜索
 - 定时任务，每晚两点自动同步文档的浏览和点赞数据
 
@@ -46,7 +46,7 @@
 ├── main.go          主函数
 ├── middleware       gin 的中间件
 ├── models           表结构
-├── plugins          插件
+├── plugins          插件，里面是独立的日志系统
 ├── routers          路由
 ├── service          服务
 ├── setting.yaml     配置文件
