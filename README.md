@@ -4,9 +4,9 @@
 
 ## 使用的技术
 
-- Golang 1.20
-- MySQL 5.6.50
-- Redis  6.2.11
+- Golang 
+- MySQL 
+- Redis 
 - Gin
 - Gorm
 - Jwt  
@@ -236,3 +236,175 @@ type DocDataModel struct {
 
 
 </details>
+
+## 中间件
+
+### 用户登录中间件
+
+
+
+
+
+### 超级管理员鉴权中间件
+
+
+
+
+
+### 日志中间件
+
+
+
+## 解耦的日志系统
+
+
+
+
+
+
+
+
+
+## 部署和运行
+
+如果是 windows 下开发，执行一下命令进行交叉编译
+
+```bash
+SET CGO_ENABLED=0
+set GOARCH=amd64
+set GOOS=linux
+go build -o main
+set GOOS=windows
+```
+
+linux 环境下直接 `go build -o main` 
+
+然后将编译好的 main 文件和配置文件 settings.yaml 放入服务器对应目录
+
+比如：
+
+```bash
+opt
+  gin-vue-docs
+    server
+      main // 后端打包之后的文件，放上服务器上记得执行 chmod +x main
+      settings.yaml
+      uploads  // 后端的一些用户上传文件目录
+      gvd_db_20230826.sql
+      gvd_server_full_text_index_20230826.json
+    web
+      dist // 前端打包之后的目录
+    gvd_server.ini
+    nginx.conf
+
+```
+
+先cd到/opt/gin-vue-docs/server
+
+```bash
+cd /opt/gin-vue-docs/server
+```
+
+
+
+### docker配置mysql
+
+```bash
+docker pull mysql:5.7
+
+mkdir -p ./mysql/conf ./mysql/datadir
+
+docker run -itd --name mysql --restart=always -p 3306:3306 -v /opt/gin-vue-docs/server/mysql/conf:/etc/mysql/conf.d -v /opt/gin-vue-docs/server/mysql/datadir:/var/lib/mysql -e  MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=gvd_db mysql:5.7
+```
+
+创建一个gvd_db 的数据库，root密码是root，端口映射为本机的3306映射到容器的3306
+
+如果已经有mysql服务了，那换一个端口就行了，在对应的settings.yaml配置文件修改就ok了
+
+### docker配置redis
+
+```bash
+docker pull redis:5.0.5
+
+docker run -itd --name redis --restart=always -p 6379:6379 redis:5.0.5 --requirepass "redis"
+```
+
+
+
+### docker配置es
+
+```bash
+mkdir -p es/config & mkdir -p es/data & mkdir -p es/plugins
+chmod 777 es/data
+echo "http.host: 0.0.0.0" > es/config/elasticsearch.yml
+
+docker run --name docs_es -p 9200:9200   -e "discovery.type=single-node" -e ES_JAVA_OPTS="-Xms84m -Xmx512m" -v /opt/gin-vue-docs/server/es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml -v /opt/gin-vue-docs/server/es/data:/usr/share/elasticsearch/data -v /opt/gin-vue-docs/server/es/plugins:/usr/share/elasticsearch/plugins -d elasticsearch:7.12.0
+
+```
+
+
+
+### 修改 settings文件
+
+根据具体情况修改 settings文件，比如：
+
+```yaml
+system:
+    ip: 127.0.0.1
+    port: 8082
+    env: dev
+mysql:
+    host: 127.0.0.1
+    port: 3306
+    config: charset=utf8mb4&parseTime=True&loc=Local
+    db: gvd_db
+    username: root
+    password: root
+    logLevel: error
+redis:
+    ip: 127.0.0.1
+    port: 6379
+    password: "redis"
+    poolSize: 100
+es:
+    addr: http://127.0.0.1:9200
+    user: 
+    password: 
+jwt:
+    expires: 8
+    issuer: caius
+    secret: soagfeohfscz
+site:
+    title: caius docs
+    icon: 
+    abstract: 
+    iconHref:
+    href: ""
+    footer: ""
+    content: ""
+
+```
+
+
+
+### 运行
+
+```
+./main
+```
+
+运行该命令后，项目就启动了，此时 mysql 里面没有表，es 里面没有索引，可以导入数据来查看效果
+
+```
+./main -load gvd_db_20230826.sql
+./main -esload gvd_server_full_text_index_20230826.json
+```
+
+
+
+
+
+
+
+
+
