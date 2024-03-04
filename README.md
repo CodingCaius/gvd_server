@@ -275,6 +275,7 @@ type DocDataModel struct {
 ![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-02-10%20145240.png)
 
 ### 图片管理
+![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/QQ%E6%88%AA%E5%9B%BE20240304111233.png)
 
 </details>
 
