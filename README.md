@@ -1,7 +1,6 @@
 # gvd_server
 [网站地址](http://docs.codingcaius.top/)  
 本项目是使用 Golang 语言开发的基于 Gin 实现的前后端分离的文档管理系统，集成了 JWT 鉴权，文档和用户的添加修改和删除，权限管理，日志管理，图片管理，路由管理，redis 缓存，全文搜索，定时任务等功能。 
-
 ## 使用的技术
 
 - Golang 
@@ -238,30 +237,46 @@ type DocDataModel struct {
 
 ## 中间件
 
-### 用户登录中间件
+用户登录中间件
 
 
 
 
 
-### 超级管理员鉴权中间件
+超级管理员鉴权中间件
 
 
 
 
 
-### 日志中间件
+日志中间件
 
 
 
 ## 解耦的日志系统
 
 
+## 项目截图
+<details>
+<summary>展开查看</summary>
 
+![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/QQ%E6%88%AA%E5%9B%BE20240304105637.png)  
 
+![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/QQ%E6%88%AA%E5%9B%BE20240304105833.png)  
 
+### 角色管理
+![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/QQ%E6%88%AA%E5%9B%BE20240304105934.png)
 
+### 日志管理
+登录日志
+![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-02-10%20145145.png)
+操作日志
+![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-02-10%20145123.png)
+![t](https://github.com/CodingCaius/gvd_server/blob/master/uploads/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-02-10%20145240.png)
 
+### 图片管理
+
+</details>
 
 
 ## 部署和运行
