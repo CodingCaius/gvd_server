@@ -251,6 +251,9 @@ type DocDataModel struct {
 
 日志中间件
 
+
+
+
 ## 图片管理
 
 对于图片，设置了三个 api，分别是图片上传、图片列表、图片删除。
@@ -274,6 +277,86 @@ type DocDataModel struct {
 删除图片前，首先进行一致性校验，传过来的数据是否都存在。
 
 然后删除图片的时候，如果发现多个相同的 hash，那就只删除记录
+
+## redis缓存管理
+
+用到的数据结构：hash、string  
+
+用来缓存文档的浏览量，点赞量；文档内容；注销的 token。
+
+**浏览量**：用哈希来存储，浏览量：{文档id: num, 文档id: num}
+
+定时从Redis中同步文档的点赞量和浏览量到数据库中的文档模型，以保持数据的一致性，同步之后会清空索引里的值。
+
+
+**文档内容**：
+
+const docContentKey = "role_doc_content_%d_%d"
+
+global.Redis.HGet(fmt.Sprintf(docContentKey, roleID, docID), fmt.Sprintf("%d", userID)).Bytes()
+
+
+
+**注销的token**：
+
+global.Redis.Set(prefix+token, "", expiration).Err()
+
+logout_'token'  " "  过期时间
+
+
+
+
+
+
+## 全文搜索
+
+### 全文搜索分析
+
+1. 将一个文档按照标题正文进行拆分
+
+```Markdown
+# 标题1
+正文1
+## 标题2
+正文2
+## 标题3
+正文3
+```
+
+2. 拆分成 title，body，slug的形式
+
+```JSON
+[
+  {
+     "title": "标题1",
+     "body": "正文1",
+     "slug": "/article/1/#标题1"
+  },
+  {
+     "title": "标题2",
+     "body": "正文2",
+     "slug": "/article/1/#标题2"
+  },
+  {
+     "title": "标题3",
+     "body": "正文3",
+     "slug": "/article/1/#标题3"
+  },
+]
+```
+
+
+
+## 定时任务
+
+使用 `github.com/robfig/cron/v3` 库来实现定时任务。
+
+编写定时任务脚本，每天2点去同步 redis 中的浏览量点赞量
+
+每天三点将数据库中文档表的数据同步到文档数据表，以方便统计每天有多少浏览量
+
+任务会在后台运行，不会阻塞主程序。
+
 
 
 
